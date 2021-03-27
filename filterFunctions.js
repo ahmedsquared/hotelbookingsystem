@@ -73,7 +73,7 @@ function hasBalconyFilter(hasBalcony) {
         case ('no'):
             return {hasBalcony: false};
         default:
-            throw Error('hasBalconyFilter can only parse "Yes" or "No"');
+            throw new Error('hasBalconyFilter can only parse "Yes" or "No"');
     }
 }
 
