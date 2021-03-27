@@ -1,13 +1,13 @@
 <h1>Search For Rooms</h1>
 <form method="post">
     <label for="numBeds">Number of Beds</label>
-    <input name="numBeds" type="number">
+    <input name="numBeds" type="number" min="1" value="1">
     </br>
 
-    <label for="bedSize">Minimum bed Size</label>
+    <label for="bedSize">Bed Size</label>
     <select name="bedSize">
         <option>King</option>
-        <option>Queen</option>
+        <option selected="selected">Queen</option>
         <option>Double</option>
         <option>Twin</option>
     </select>
@@ -15,15 +15,23 @@
 
     <label for="roomSize">Room Size</label>
     <select name="roomSize">
-        <option>Penthouse</option>
-        <option>Large</option>
-        <option>Medium</option>
         <option>Small</option>
+        <option>Medium</option>
+        <option>Large</option>
+        <option>Penthouse</option>
     </select>
     </br>
 
-    <label for="viewDirection">View Direction</label>
-    <select name="viewDirection">
+    <label for="hasBalcony">Balcony</label>
+    <select name="hasBalcony">
+        <option>Any</option>
+        <option>Yes</option>
+        <option>No</option>
+    </select>
+    </br>
+
+    <label for="facesDirection">Faces Direction</label>
+    <select name="facesDirection">
         <option>Any</option>
         <option>North</option>
         <option>East</option>
@@ -33,7 +41,7 @@
     </br>
 
     <label for="maxPrice">Maximum Price</label>
-    <input name="maxPrice" type="number">
+    <input name="maxPrice" type="number" min="0">
     </br>
 
     <label for="startDate">From</label>
@@ -44,6 +52,23 @@
     <input name="endDate" type="date">
     </br>
 
-    <button>Search</button>
+    <button type="submit" name="search">Search</button>
 
 </form>
+
+</br>
+<div>
+    {{#each results}}
+    <div>Room: {{this.roomNumber}}</div>
+    <div>Size: {{this.size}}</div>
+    <div>Beds: {{this.beds}}</div>
+    <div>Base Price: ${{this.basePrice}}</div>
+    <div>Faces: {{this.facesDirection}}</div>
+    <div>
+        {{#if this.hasBalcony}}Has Balcony
+        {{else}}No Balcony
+        {{/if}}
+    </div>
+    </br>
+    {{/each}}
+</div>
