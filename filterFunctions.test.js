@@ -1,5 +1,38 @@
 var filters = require('./filterFunctions');
 
+test('Construct Filter Object', function() {
+    var parameters = {};
+    var expectedObject = {};
+    expect(filters.constructFilterObject(parameters)).toEqual(expectedObject);
+
+    parameters = {
+        bedSize: 'Queen'
+    };
+    expectedObject = {
+        beds: {$in: ['Queen', 'King']}
+    };
+    expect(filters.constructFilterObject(parameters)).toEqual(expectedObject);
+
+    parameters = {
+        bedSize: 'Double',
+        facesDirection: 'Any'
+    };
+    expectedObject = {
+        beds: {$in: ['Double', 'Queen', 'King']}
+    };
+    expect(filters.constructFilterObject(parameters)).toEqual(expectedObject);
+
+    parameters = {
+        bedSize: 'King',
+        facesDirection: 'East',
+    };
+    expectedObject = {
+        beds: {$in: ['King']},
+        facesDirection: 'East'
+    };
+    expect(filters.constructFilterObject(parameters)).toEqual(expectedObject);
+});
+
 test('Bed Size Filter', function() {
     var result = filters.bedSizeFilter('Twin');
     var expected = {beds: {$in: ['Twin', 'Double', 'Queen', 'King']}};
