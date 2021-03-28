@@ -15,7 +15,7 @@ async function connect(){
     return db;
 }
 
-async function register(username){
+async function register(username, password){
     var conn = await connect();
     var existingUser = await conn.collection('customers').findOne({username});
 
@@ -26,7 +26,7 @@ async function register(username){
     await conn.collection('customers').insertOne({username});
 }
 
-async function login(username){
+async function login(username, password){
     var conn = await connect();
     var user = await conn.collection('customers').findOne({username});
 
