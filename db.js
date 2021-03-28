@@ -26,4 +26,49 @@ async function payment_info(username) {
     }
 }
 
-payment_info("colin");
+async function enter_payment_info(username){
+    var conn = await connect();
+    var user = await conn.collection('users').findOne({ username });
+
+    if (user == null) {
+        throw new Error('User does not exist!');
+    }
+}
+
+async function add_payment_info(username, credit_num, csv) {
+    var conn = await connect();
+
+    await conn.collection('users').updateOne(
+        { username },
+        {
+            $push: {
+                list: {
+                    $each: [credit_num, csv]
+                }
+
+            }
+        }
+    )
+}
+
+async function getListItems(username) {
+    var conn = await connect();
+    var user = await conn.collection('users').findOne({ username });
+
+    console.log("List items: ", user.list);
+}
+
+async function deleteListItems(username, item) {
+    var conn = await connect();
+    await conn.collection('users').updateOne(
+        { username },
+        {
+            $pull: {
+                list: item,
+            }
+        }
+    )
+}
+//add_payment_info("colin", "another credit number", "another csv");
+//deleteListItems('colin', 'another csv')
+getListItems("colin");
