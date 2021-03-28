@@ -45,5 +45,17 @@ async function login(username, password){
     }
 }
 
-login('Ahmed', "lol");
-//register("Ahmed", "lol");
+async function addRoom(numberOfBeds, bedSize, roomSize, viewType, price){
+    var conn = await connect();
+    var roomId = 1;
+    var roomExists = await conn.collection('hotelRooms').findOne({roomId});
+
+    while (roomExists != null){
+        roomId++;
+        roomExists = await conn.collection('hotelRooms').findOne({roomId});
+    }
+
+    await conn.collection('hotelRooms').insertOne({roomId, numberOfBeds, bedSize, roomSize, viewType, price});
+}
+
+//login('Ahmed', "lol");
