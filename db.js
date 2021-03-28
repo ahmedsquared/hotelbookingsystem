@@ -1,4 +1,5 @@
 var { MongoClient } = require("mongodb");
+var bcrypt = require('bcrypt');
 
 var db = null;
 async function connect(){
@@ -23,7 +24,10 @@ async function register(username, password){
         throw new Error('User already exists!')
     }
 
-    await conn.collection('customers').insertOne({username});
+    var SALT_ROUNDS = 10;
+    var passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+
+    await conn.collection('customers').insertOne({username, passwordHash});
 }
 
 async function login(username, password){
@@ -33,7 +37,13 @@ async function login(username, password){
     if (user == null){
         throw new Error('User does not exist.')
     }
+
+    var valid = await bcrypt.compare(password, user.passwordHash);
+
+    if (!valid){
+        throw new Error('Invalid password!');
+    }
 }
 
-login('Ahmed');
+login('Ahmed', "lol");
 //register("Ahmed", "lol");
