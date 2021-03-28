@@ -9,8 +9,31 @@ async function connect(){
         };
 
         var connection = await MongoClient.connect(url, options);
-        db = connection.db("cps888");
+        db = await connection.db("cps888");
     }
     
     return db;
 }
+
+async function register(username){
+    var conn = await connect();
+    var existingUser = await conn.collection('customers').findOne({username});
+
+    if (existingUser != null){
+        throw new Error('User already exists!')
+    }
+
+    await conn.collection('customers').insertOne({username});
+}
+
+async function login(username){
+    var conn = await connect();
+    var user = await conn.collection('customers').findOne({username});
+
+    if (user == null){
+        throw new Error('User does not exist.')
+    }
+}
+
+login('Ahmed');
+//register("Ahmed", "lol");
