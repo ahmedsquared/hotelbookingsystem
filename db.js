@@ -75,4 +75,5 @@ async function deleteListItems(username, item) {
 
 module.exports = {
     url,
+    add_payment_info,
 }
