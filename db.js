@@ -1,10 +1,10 @@
 const { registerHelper } = require("hbs");
 var { MongoClient } = require("mongodb");
+var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
 
 var db = null;
 async function connect(){
     if(db == null){
-        var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
         var options = {
             useUnifiedTopology: true,
         };
@@ -72,3 +72,7 @@ async function deleteListItems(username, item) {
 //add_payment_info("colin", "another credit number", "another csv");
 //deleteListItems('colin', 'another csv')
 //getListItems("colin");
+
+module.exports = {
+    url,
+}
