@@ -1,11 +1,26 @@
-<h1>HOT3L</h1>
-<h2>Login</h2>
+<h1>Welcome, {{username}}</h1>
+<h2>Booked Room IDs:</h2>
 <form>
-    <input type="text" placeholder="Enter Username">
-    <br>
-    <input type="password" placeholder="Enter Password">
-    <br>
-    <input value="Login" type="submit">
-    <br>
-    <input value="Register" type="submit">
+    <table style="width:15%">
+        <tr>
+            <th>Room ID</th>
+            <th>Unbook</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td><input value="Unbook" type="submit"></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td><input value="Unbook" type="submit"></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td><input value="Unbook" type="submit"></td>
+        </tr>
+    </table>
+</form>
+<br>
+<form>
+    <input type="submit" value="Logout">
 </form>
