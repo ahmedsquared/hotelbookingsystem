@@ -71,4 +71,4 @@ async function deleteListItems(username, item) {
 }
 //add_payment_info("colin", "another credit number", "another csv");
 //deleteListItems('colin', 'another csv')
-getListItems("colin");
+//getListItems("colin");
