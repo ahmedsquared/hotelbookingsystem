@@ -1,5 +1,5 @@
 var {MongoClient} = require("mongodb");
-var bcrypt = requre("bcrypt");
+var bcrypt = require("bcrypt");
 var db = null;
 async function connect(){
     if (db == null){
@@ -8,7 +8,7 @@ async function connect(){
          useUnifiedTopology: true,
         }
 
-        var connection = await MongoClient.connect(url);
+        var connection = await MongoClient.connect(url, options);
         db = await connection.db("cps888");
     }
 
@@ -76,3 +76,4 @@ async function deleteListItems(username, item){
         }
     )
 }
+
