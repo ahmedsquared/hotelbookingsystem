@@ -63,6 +63,8 @@ async function addRoom(numberOfBeds, bedSize, roomSize, viewType, price){
 
 module.exports = {
     url,
+    login,
+    register,
 };
 
 //login('Ahmed', "lol");
