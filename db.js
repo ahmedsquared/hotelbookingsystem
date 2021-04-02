@@ -1,10 +1,10 @@
 var { MongoClient } = require("mongodb");
 var bcrypt = require('bcrypt');
+var url = 'mongodb+srv://dbUser:Wf81kH5ELPmpAo1u@cluster0.gnrno.mongodb.net/cps888?retryWrites=true&w=majority';
 
 var db = null;
 async function connect(){
     if(db == null){
-        var url = 'mongodb+srv://dbUser:Wf81kH5ELPmpAo1u@cluster0.gnrno.mongodb.net/cps888?retryWrites=true&w=majority';
         var options = {
             useUnifiedTopology: true,
         };
@@ -61,9 +61,8 @@ async function addRoom(numberOfBeds, bedSize, roomSize, viewType, price){
     await conn.collection('hotelRooms').insertOne({roomId, numberOfBeds, bedSize, roomSize, viewType, price, isBooked, bookedBy});
 }
 
-//addRoom(1, "King", 330, "Window", 60);
-//addRoom(1, "King", 330, "Window", 60);
-//addRoom(1, "Queen", 330, "Balcony", 50);
-//addRoom(2, "Full", 400, "Balcony", 90);
-//addRoom(2, "Full", 400, "Balcony", 90);
+module.exports = {
+    url,
+};
+
 //login('Ahmed', "lol");
