@@ -18,6 +18,7 @@ async function connect(){
 
 async function register(username, password){
     var conn = await connect();
+    var bookedRooms = [];
     var existingUser = await conn.collection('customers').findOne({username});
 
     if (existingUser != null){
@@ -49,13 +50,20 @@ async function addRoom(numberOfBeds, bedSize, roomSize, viewType, price){
     var conn = await connect();
     var roomId = 1;
     var roomExists = await conn.collection('hotelRooms').findOne({roomId});
+    var isBooked = false;
+    var bookedBy = "";
 
     while (roomExists != null){
         roomId++;
         roomExists = await conn.collection('hotelRooms').findOne({roomId});
     }
 
-    await conn.collection('hotelRooms').insertOne({roomId, numberOfBeds, bedSize, roomSize, viewType, price});
+    await conn.collection('hotelRooms').insertOne({roomId, numberOfBeds, bedSize, roomSize, viewType, price, isBooked, bookedBy});
 }
 
+//addRoom(1, "King", 330, "Window", 60);
+//addRoom(1, "King", 330, "Window", 60);
+//addRoom(1, "Queen", 330, "Balcony", 50);
+//addRoom(2, "Full", 400, "Balcony", 90);
+//addRoom(2, "Full", 400, "Balcony", 90);
 //login('Ahmed', "lol");
