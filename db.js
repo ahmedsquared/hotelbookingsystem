@@ -77,3 +77,37 @@ async function deleteListItems(username, item){
     )
 }
 
+
+async function addRoom(roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, maxPrice){
+    var conn = await connect();
+    var roomExists = await conn.collection('hotelRooms').findOne({roomId});
+    var isBooked = false;
+
+    while (roomExists != null){
+        throw new Error('Room already exists.');
+    }
+
+    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, maxPrice, isBooked});
+}
+
+async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice, customer, startDate, endDate, timestamp){
+    var conn = await connect();
+    var roomCollection = await conn.collection('hotelRooms')
+    var roomIdent = await conn.collection('hotelRooms').findOne({roomId});
+    var existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
+    if (existingBooking!= null){
+        throw new Error('Booking already exists.');
+    }
+    else if (roomIdent == null){
+        throw new Error('Room does not exist.');
+    }
+    else if (roomIdent.isBooked){
+        throw new Error('Room is already booked.');
+    }
+    roomCollection.updateOne(
+        { "roomId" : roomId},
+        {$set: {isBooked: true}}
+    );
+    
+    await conn.collection('hotelBookings').insertOne({bookingId, bookingStatus, room: roomIdent._id, services, totalPrice, customer, startDate, endDate, timestamp});
+}
