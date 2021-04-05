@@ -59,10 +59,10 @@
 </br>
 <div>
     {{#each results}}
-    <div>Room: {{this.roomNumber}}</div>
-    <div>Size: {{this.size}}</div>
-    <div>Beds: {{this.beds}}</div>
-    <div>Base Price: ${{this.basePrice}}</div>
+    <div>Room: {{this.roomId}}</div>
+    <div>Size: {{this.roomSize}}</div>
+    <div>Beds: {{this.numBeds}} {{this.bedSize}}</div>
+    <div>Base Price: ${{this.maxPrice}}</div>
     <div>Faces: {{this.facesDirection}}</div>
     <div>
         {{#if this.hasBalcony}}Has Balcony

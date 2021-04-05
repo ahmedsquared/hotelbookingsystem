@@ -9,7 +9,7 @@ test('Construct Filter Object', function() {
         bedSize: 'Queen'
     };
     expectedObject = {
-        beds: {$in: ['Queen', 'King']}
+        bedSize: {$in: ['Queen', 'King']}
     };
     expect(filters.constructFilterObject(parameters)).toEqual(expectedObject);
 
@@ -18,7 +18,7 @@ test('Construct Filter Object', function() {
         facesDirection: 'Any'
     };
     expectedObject = {
-        beds: {$in: ['Double', 'Queen', 'King']}
+        bedSize: {$in: ['Double', 'Queen', 'King']}
     };
     expect(filters.constructFilterObject(parameters)).toEqual(expectedObject);
 
@@ -27,7 +27,7 @@ test('Construct Filter Object', function() {
         facesDirection: 'East',
     };
     expectedObject = {
-        beds: {$in: ['King']},
+        bedSize: {$in: ['King']},
         facesDirection: 'East'
     };
     expect(filters.constructFilterObject(parameters)).toEqual(expectedObject);
@@ -35,37 +35,37 @@ test('Construct Filter Object', function() {
 
 test('Bed Size Filter', function() {
     var result = filters.bedSizeFilter('Twin');
-    var expected = {beds: {$in: ['Twin', 'Double', 'Queen', 'King']}};
+    var expected = {bedSize: {$in: ['Twin', 'Double', 'Queen', 'King']}};
     expect(result).toEqual(expected);
     
     result = filters.bedSizeFilter('Double');
-    expected = {beds: {$in: ['Double', 'Queen', 'King']}};
+    expected = {bedSize: {$in: ['Double', 'Queen', 'King']}};
     expect(result).toEqual(expected);
     
     result = filters.bedSizeFilter('Queen');
-    expected = {beds: {$in: ['Queen', 'King']}};
+    expected = {bedSize: {$in: ['Queen', 'King']}};
     expect(result).toEqual(expected);
     
     result = filters.bedSizeFilter('King');
-    expected = {beds: {$in: ['King']}};
+    expected = {bedSize: {$in: ['King']}};
     expect(result).toEqual(expected);
 });
 
 test('Room Size Filter', function() {
     var result = filters.roomSizeFilter('Small');
-    var expected = {size: {$in: ['Small', 'Medium', 'Large', 'Penthouse']}};
+    var expected = {roomSize: {$in: ['Small', 'Medium', 'Large', 'Penthouse']}};
     expect(result).toEqual(expected);
     
     result = filters.roomSizeFilter('Medium');
-    expected = {size: {$in: ['Medium', 'Large', 'Penthouse']}};
+    expected = {roomSize: {$in: ['Medium', 'Large', 'Penthouse']}};
     expect(result).toEqual(expected);
     
     result = filters.roomSizeFilter('Large');
-    expected = {size: {$in: ['Large', 'Penthouse']}};
+    expected = {roomSize: {$in: ['Large', 'Penthouse']}};
     expect(result).toEqual(expected);
     
     result = filters.roomSizeFilter('Penthouse');
-    expected = {size: {$in: ['Penthouse']}};
+    expected = {roomSize: {$in: ['Penthouse']}};
     expect(result).toEqual(expected);
 });
 

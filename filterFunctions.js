@@ -27,6 +27,7 @@ function constructFilterObject(parameters) {
             };
         }
     });
+    console.log('FilterObject:\n', filterObject);
     return filterObject;
 }
 
@@ -45,7 +46,7 @@ function constructFilterObject(parameters) {
         'King'
     ];
     filter = filter.slice(filter.indexOf(minSize));
-    return {beds: {$in: filter}};
+    return {bedSize: {$in: filter}};
 }
 
 /**
@@ -63,7 +64,7 @@ function roomSizeFilter(roomSize) {
         'Penthouse'
     ];
     filter = filter.slice(filter.indexOf(roomSize));
-    return {size: {$in: filter}};
+    return {roomSize: {$in: filter}};
 }
 
 function hasBalconyFilter(hasBalcony) {
