@@ -1,4 +1,4 @@
-var {MongoClient} = require("mongodb");
+var {MongoClient, ObjectId} = require("mongodb");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
 var db = null;
@@ -17,11 +17,37 @@ async function connect(){
 }
 
 async function searchRooms(parameters) {
-    var conn = await connect();
+    const conn = await connect();
     filterObject = filters.constructFilterObject(parameters);
     console.log('searching with the following filter object:\n', filterObject);
-    var results = await conn.collection('hotelRooms').find(filterObject).toArray();
-    return results;
+    const results = await conn.collection('hotelRooms').find(filterObject).toArray();
+    console.log('Results:\n', results);
+
+    //Filter out results that have booking within the given date range
+    const availableResults = [];
+    await Promise.all(results.map(async result => {
+        const roomObj = {
+            room: ObjectId(result._id),
+            $and: [
+                {
+                    startDate: {
+                        $lte: new Date(parameters.endDate)
+                    }
+                },
+                {
+                    endDate: {
+                        $gte: new Date(parameters.startDate)
+                    }
+                }
+            ]
+        }
+        const conflictingBooking = await conn.collection('hotelBookings').findOne(roomObj);
+        if (!conflictingBooking) {
+            availableResults.push(result);
+        }
+    }));
+    console.log('Available Results:\n', availableResults);
+    return availableResults;
 }
 
 
