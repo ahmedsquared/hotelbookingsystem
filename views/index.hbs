@@ -1,5 +1,30 @@
-<h1>Payment Summary</h1>
-<form>
-    <input placeholder="Credit Card Number">
-   
+<h1>Welcome, {{username}}</h1>
+<h2>Booked Room IDs:</h2>
+<form method="post">
+    <table style="width:15%">
+        <tr>
+            <th>Room ID</th>
+            <th>Number of Beds</th>
+            <th>Bed Size</th>
+            <th>Cancel</th>
+        </tr>
+        {{#each items}}
+        <tr>
+            <td>{{this.roomId}}</td>
+            <td>{{this.numberOfBeds}}</td>
+            <td>{{this.bedSize}}</td>
+            <td>
+                <button name="cancel" value="{{this.roomId}}" type="submit">
+                    Cancel
+                </button>
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+</form>
+
+<br>
+
+<form method="post" action="logout">
+    <input type="submit" value="Logout">
 </form>

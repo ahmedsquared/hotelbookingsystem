@@ -2,6 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var filters = require('./filterFunctions');
 var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
+var { MongoClient } = require("mongodb");
 
 var db = null;
 async function connect(){
@@ -174,5 +175,57 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
 module.exports = {
     url,
     add_payment_info,
-    searchRooms
+    searchRooms,
+    login,
+    getCustomerRooms,
+    cancelBooking
 }
+async function getCustomerRooms(username){
+    var conn = await connect();
+    var user = await conn.collection('customers').findOne({username});
+    var roomArr = [];
+
+    var roomId = 0;
+    let i;
+    for(i = 0;i < user.bookedRooms.length;i++){
+        roomId = user.bookedRooms[i];
+        var room = await conn.collection('hotelRooms').findOne({roomId});
+        roomArr.push(room);
+    }
+    
+    return roomArr;
+}
+
+async function cancelBooking(username, roomId){
+    var conn = await connect();
+    var user = await conn.collection('customers').findOne({username});
+    var room = await conn.collection('hotelRooms').findOne({roomId});
+    var newBookedRooms = user.bookedRooms;
+
+    roomId = parseInt(roomId, 10);
+
+    await conn.collection('hotelRooms').updateOne(
+        {roomId},
+            $set: {
+        {
+                isBooked: false,
+            }
+        }
+    )
+}
+    )
+        }
+            }
+                bookedRooms: newBookedRooms,
+            $set: {
+        {
+        {username},
+    await conn.collection('customers').updateOne(
+
+    let i;
+    for(i=0;i<newBookedRooms.length;i++){
+        if(newBookedRooms[i] === roomId){
+            newBookedRooms.splice(i, 1);
+            break;
+        }
+    }

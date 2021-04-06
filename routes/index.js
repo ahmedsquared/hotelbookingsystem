@@ -41,4 +41,40 @@ router.post('/search', async function(req, res) {
   res.render('searchView', { title: 'Search Results', results: results })
 });
 
+router.post('/login', async function(req, res){
+  var {username, password, register} = req.body;
+  console.log('logging in ...', username);
+
+  if (register){
+    await db.register(username, password);
+  }else{
+    await db.login(username, password);
+  }
+
+  req.session.username = username;
+  res.redirect('/');
+});
+router.get('/', async function(req, res){
+  var {username} = req.session;
+  res.render('index', {
+    title: "Account",
+    username,
+    items: await db.getCustomerRooms(username),
+  });
+});
+
+router.post('/', async function(req, res){
+  var {username} = req.session;
+
+    await db.cancelBooking(username, req.body.cancel);
+  }
+  res.redirect('/');
+
+  if(req.body.cancel) {
+});
+
+router.post('/logout', async function(req, res){
+  req.session.username = '';
+  res.redirect('/login');
+});
 module.exports = router;
