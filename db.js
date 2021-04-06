@@ -190,10 +190,12 @@ async function getCustomerRooms(username){
 
     var roomId = 0;
     let i;
-    for(i = 0;i < user.bookedRooms.length;i++){
-        roomId = user.bookedRooms[i];
-        var room = await conn.collection('hotelRooms').findOne({roomId});
-        roomArr.push(room);
+    if (user && user.bookedRooms && user.bookedRooms) {
+        for(i = 0; i < user.bookedRooms.length; i++){
+            roomId = user.bookedRooms[i];
+            var room = await conn.collection('hotelRooms').findOne({roomId});
+            roomArr.push(room);
+        }
     }
     
     return roomArr;
