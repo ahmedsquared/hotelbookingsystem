@@ -1,0 +1,74 @@
+<h1>Search For Rooms</h1>
+<form method="post">
+    <label for="numBeds">Number of Beds</label>
+    <input name="numBeds" type="number" min="1" value="1">
+    </br>
+
+    <label for="bedSize">Bed Size</label>
+    <select name="bedSize">
+        <option>King</option>
+        <option selected="selected">Queen</option>
+        <option>Double</option>
+        <option>Twin</option>
+    </select>
+    </br>
+
+    <label for="roomSize">Room Size</label>
+    <select name="roomSize">
+        <option>Small</option>
+        <option>Medium</option>
+        <option>Large</option>
+        <option>Penthouse</option>
+    </select>
+    </br>
+
+    <label for="hasBalcony">Balcony</label>
+    <select name="hasBalcony">
+        <option>Any</option>
+        <option>Yes</option>
+        <option>No</option>
+    </select>
+    </br>
+
+    <label for="facesDirection">Faces Direction</label>
+    <select name="facesDirection">
+        <option>Any</option>
+        <option>North</option>
+        <option>East</option>
+        <option>South</option>
+        <option>West</option>
+    </select>
+    </br>
+
+    <label for="maxPrice">Maximum Price</label>
+    <input name="maxPrice" type="number" min="0">
+    </br>
+
+    <label for="startDate">From</label>
+    <input name="startDate" type="date" required>
+    </br>
+
+    <label for="endDate">To</label>
+    <input name="endDate" type="date" required>
+    </br>
+
+    <button type="submit" name="search">Search</button>
+
+</form>
+
+</br>
+<div>
+    {{#each results}}
+    <div>Room: {{this.roomId}}</div>
+    <div>Size: {{this.roomSize}}</div>
+    <div>Beds: {{this.numBeds}} {{this.bedSize}}</div>
+    <div>Base Price: ${{this.maxPrice}}</div>
+    <div>Faces: {{this.facesDirection}}</div>
+    <div>
+        {{#if this.hasBalcony}}Has Balcony
+        {{else}}No Balcony
+        {{/if}}
+    </div>
+    </br>
+    {{/each}}
+</div>
