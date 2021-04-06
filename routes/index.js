@@ -21,18 +21,36 @@ router.post('/login', async function(req, res){
 });
 
 function ensureLoggedIn(req, res, next){
-  if (!req.session.username){
+  if (req.session.username == ''){
     res.redirect('/login');
   } else {
     next();
   }
 }
 
-router.use(ensureLoggedIn);
-
 router.get('/', async function(req, res){
   var {username} = req.session;
-  res.render('index', {title: "Account", username});
+  res.render('index', {
+    title: "Account",
+    username,
+    items: await db.getCustomerRooms(username),
+  });
 });
 
+router.post('/', async function(req, res){
+  var {username} = req.session;
+
+  if(req.body.cancel) {
+    await db.cancelBooking(username, req.body.cancel);
+  }
+
+  res.redirect('/');
+});
+
+router.post('/logout', async function(req, res){
+  req.session.username = '';
+  res.redirect('/login');
+});
+
+router.use(ensureLoggedIn);
 module.exports = router;

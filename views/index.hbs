@@ -1,6 +1,6 @@
-<h1>Welcome, {{username}}</h1> <!-- Replace 'user' with {{username}} -->
+<h1>Welcome, {{username}}</h1>
 <h2>Booked Room IDs:</h2>
-<form>
+<form method="post">
     <table style="width:15%">
         <tr>
             <th>Room ID</th>
@@ -8,21 +8,23 @@
             <th>Bed Size</th>
             <th>Cancel</th>
         </tr>
+        {{#each items}}
         <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>King</td>
-            <td><input value="Cancel" type="submit"></td>
+            <td>{{this.roomId}}</td>
+            <td>{{this.numberOfBeds}}</td>
+            <td>{{this.bedSize}}</td>
+            <td>
+                <button name="cancel" value="{{this.roomId}}" type="submit">
+                    Cancel
+                </button>
+            </td>
         </tr>
-        <tr>
-            <td>3</td>
-            <td>1</td>
-            <td>Queen</td>
-            <td><input value="Cancel" type="submit"></td>
-        </tr>
+        {{/each}}
     </table>
 </form>
+
 <br>
-<form>
+
+<form method="post" action="logout">
     <input type="submit" value="Logout">
 </form>
