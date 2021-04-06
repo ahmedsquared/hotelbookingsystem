@@ -41,6 +41,10 @@ router.post('/search', async function(req, res) {
   res.render('searchView', { title: 'Search Results', results: results })
 });
 
+router.get('/login', async function(req, res){
+  res.render('login', {title: 'Login'});
+});
+
 router.post('/login', async function(req, res){
   var {username, password, register} = req.body;
   console.log('logging in ...', username);
@@ -66,11 +70,11 @@ router.get('/', async function(req, res){
 router.post('/', async function(req, res){
   var {username} = req.session;
 
+  if (req.body.cancel) {
     await db.cancelBooking(username, req.body.cancel);
   }
-  res.redirect('/');
 
-  if(req.body.cancel) {
+  res.redirect('/');
 });
 
 router.post('/logout', async function(req, res){

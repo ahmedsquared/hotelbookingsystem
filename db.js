@@ -206,21 +206,12 @@ async function cancelBooking(username, roomId){
 
     await conn.collection('hotelRooms').updateOne(
         {roomId},
-            $set: {
         {
+            $set: {
                 isBooked: false,
             }
         }
     )
-}
-    )
-        }
-            }
-                bookedRooms: newBookedRooms,
-            $set: {
-        {
-        {username},
-    await conn.collection('customers').updateOne(
 
     let i;
     for(i=0;i<newBookedRooms.length;i++){
@@ -229,3 +220,13 @@ async function cancelBooking(username, roomId){
             break;
         }
     }
+
+    await conn.collection('customers').updateOne(
+        {username},
+        {
+            $set: {
+                bookedRooms: newBookedRooms,
+            }
+        }
+    )
+}
