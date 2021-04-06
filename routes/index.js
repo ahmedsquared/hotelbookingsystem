@@ -10,11 +10,8 @@ router.get('/payment', async function(req, res) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  //res.render('index', { title: 'Express' });
   res.render('customer_page', { title: 'Customer Page' });
-/*router.get('/', function(req, res, next) {
-  res.render('payment', { title: 'Hotel Bookings' });
-});*/
+});
 
 router.post('/payment', async function(req, res){
   //pull variables from request, if don't exist, undefined
@@ -42,6 +39,6 @@ router.get('/search', function(req, res, next) {
 router.post('/search', async function(req, res) {
   results = await db.searchRooms(req.body);
   res.render('searchView', { title: 'Search Results', results: results })
-})
+});
 
 module.exports = router;

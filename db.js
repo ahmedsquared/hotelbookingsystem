@@ -30,17 +30,17 @@ async function searchRooms(parameters) {
         const roomObj = {
             room: ObjectId(result._id),
             $and: [
+                {
                     startDate: {
                         $lte: new Date(parameters.endDate)
-                {
                     }
                 },
                 {
                     endDate: {
                         $gte: new Date(parameters.startDate)
+                    }
                 }
             ]
-                    }
         }
         const conflictingBooking = await conn.collection('hotelBookings').findOne(roomObj);
         if (!conflictingBooking) {
@@ -50,6 +50,7 @@ async function searchRooms(parameters) {
     console.log('Available Results:\n', availableResults);
     return availableResults;
 }
+
 async function payment_info(username) {
     var conn = await connect();
     //Store user if exist into existingUser var
@@ -59,6 +60,7 @@ async function payment_info(username) {
     if(existingUser == null) {
     }
 }
+
 async function enter_payment_info(username){
     var conn = await connect();
     var user = await conn.collection('users').findOne({ username });
@@ -67,6 +69,7 @@ async function enter_payment_info(username){
         throw new Error('User does not exist!');
     }
 }
+
 async function add_payment_info(username, credit_num, csv) {
     var conn = await connect();
 
@@ -90,17 +93,18 @@ async function getListItems(username) {
     console.log("List items: ", user.list);
 }
 
-async function deleteListItems(username, item) {
+async function deleteListItems(username, item){
+    var conn = await connect();
     await conn.collection('users').updateOne(
-        { username },
+        {username},
         {
             $pull: {
                 list: item,
+            }
         }
     )
-            }
 }
-    var conn = await connect();
+
 async function register(username, password){
     var conn = await connect();
     var existingUser = await conn.collection('users').findOne({username});
@@ -115,6 +119,7 @@ async function register(username, password){
     await conn.collection('users').insertOne({username, passwordHash});
 
 }
+
 async function login(username, password){
     var conn = await connect();
     var user = await conn.collection('users').findOne({username});
@@ -130,8 +135,6 @@ async function login(username, password){
     }
 }
 
-
-
 async function addRoom(roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, maxPrice){
 
     var conn = await connect();
@@ -144,20 +147,22 @@ async function addRoom(roomId, numBeds, bedSize, roomSize, hasBalcony, facesDire
 
     await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, maxPrice, isBooked});
 }
+
 async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice, customer, startDate, endDate, timestamp){
     var conn = await connect();
     var roomCollection = await conn.collection('hotelRooms')
-    if (existingBooking!= null){
     var roomIdent = await conn.collection('hotelRooms').findOne({roomId});
     var existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
+    
+    if (existingBooking!= null){
         throw new Error('Booking already exists.');
     }
     else if (roomIdent == null){
         throw new Error('Room does not exist.');
     }
     else if (roomIdent.isBooked){
-    }
         throw new Error('Room is already booked.');
+    }
     roomCollection.updateOne(
         { "roomId" : roomId},
         {$set: {isBooked: true}}
@@ -165,6 +170,7 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
     
     await conn.collection('hotelBookings').insertOne({bookingId, bookingStatus, room: roomIdent._id, services, totalPrice, customer, startDate, endDate, timestamp});
 }
+
 module.exports = {
     url,
     add_payment_info,
