@@ -1,7 +1,8 @@
 var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
+var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
+var url = 'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 
 var db = null;
@@ -125,8 +126,9 @@ async function login(username, password){
     var conn = await connect();
     var user = await conn.collection('users').findOne({username});
 
-        throw new Error("User does not exist.");
+        
     if (user == null){
+        throw new Error("User does not exist.");
     }
 
     var valid = await bcrypt.compare(password, user.passwordHash);
@@ -177,6 +179,7 @@ module.exports = {
     add_payment_info,
     searchRooms,
     login,
+    register,
     getCustomerRooms,
     cancelBooking
 }

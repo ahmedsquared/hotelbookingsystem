@@ -9,9 +9,9 @@ router.get('/payment', async function(req, res) {
 });
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('customer_page', { title: 'Customer Page' });
-});
+//router.get('/', function(req, res, next) {
+//  res.render('customer_page', { title: 'Customer Page' });
+//});
 
 router.post('/payment', async function(req, res){
   //pull variables from request, if don't exist, undefined
