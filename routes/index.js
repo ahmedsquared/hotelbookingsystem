@@ -50,7 +50,7 @@ router.post('/payment', async function(req, res){
     var check = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp);
     if (check == 1) {
       //create booking and redirect to user home page
-      res.redirect('/');
+      res.redirect('/customer');
     }
     else {
 //res.redirect('/payment');
