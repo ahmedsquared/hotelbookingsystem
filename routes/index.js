@@ -15,7 +15,7 @@ router.get('/payment', async function(req, res) {
 
 router.post('/payment', async function(req, res){
   //pull variables from request, if don't exist, undefined
-  var { owner, credit_num, csv, exp } = req.body;
+  var { owner, credit_num, csv, exp, pay } = req.body;
   console.log('paying now ...', credit_num);
 
   //Check for pay or back button pressed
