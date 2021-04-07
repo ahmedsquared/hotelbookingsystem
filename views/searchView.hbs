@@ -70,44 +70,15 @@
             </div>
 
 
-</form>
-<form method="post" action="back_customer">
-    <input value="Back" type="submit">
-</form>
+        </form>
+        <form method="post" action="back_customer">
+            <input value="Back" type="submit">
+        </form>
 
 
         </br>
         <div class="results-container">
             {{#each results}}
-            <div class="result-card">
-                <div class="result-card-title">Room {{this.roomId}}</div>
-                <div class="result-card-line">
-                    <div>Size:</div>
-                    <div>{{this.roomSize}}</div>
-                </div>
-                <div class="result-card-line">
-                    <div>Beds:</div>
-                    <div>{{this.numBeds}} {{this.bedSize}}</div>
-                </div>
-                <div class="result-card-line">
-                    <div>Base Price:</div>
-                    <div>${{this.maxPrice}}</div>
-                </div>
-                <div class="result-card-line">
-                    <div>Faces:</div>
-                    <div>{{this.facesDirection}}</div>
-                </div>
-                <div class="result-card-line">
-                    {{#if this.hasBalcony}}Has Balcony
-                    {{else}}No Balcony
-                    {{/if}}
-                </div>
-                <div class="result-card-line">
-                    <div></div>
-                    <button>Book</button>
-                    <div></div>
-                </div>
-            </div>
             <div class="result-card">
                 <div class="result-card-title">Room {{this.roomId}}</div>
                 <div class="result-card-line">
