@@ -32,6 +32,8 @@ async function searchRooms(parameters) {
         const roomObj = {
             room: ObjectId(result._id),
             $and: [
+                {bookingStatus: {$ne: 'Canceled'}},
+                {bookingStatus: {$ne: 'Cancelled'}},
                 {
                     startDate: {
                         $lte: new Date(parameters.endDate)
@@ -242,7 +244,7 @@ async function cancelBooking(parameter){
 
 module.exports = {
     url,
-    //add_payment_info,
+    check_payment_info,
     searchRooms,
     login,
     register,
