@@ -76,43 +76,17 @@ async function check_payment_info(username, owner, credit_num, csv, exp) {
    
     var conn = await connect();
     var user = await conn.collection('users').findOne({username});
-
+    var payment_processed = 0;
     if (user.owner == owner && user.credit_num == credit_num && user.csv == csv && user.exp == exp) {
         console.log('Success Payment Match:\n');
+        payment_processed = 1;
     }
     else {
         throw new Error("Payment Information Mismatch!");
+        payment_processed = 0;
     }
-   /* await conn.collection('users').updateOne(
-        { username },
-        {
-            $push: {
-                list: {
-                    $each: [credit_num, csv]
-                }
-
-            }
-        }
-    )  */
-
- //   var conn = await connect();
-   // var roomCollection = await conn.collection('hotelRooms')
-   // var roomIdent = await conn.collection('hotelRooms').findOne({roomId});
-   // var existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
-    
-  //  if (roomIdent == null){
-  //      throw new Error('Room does not exist.');
-  //  }
-    
-    //await conn.collection('hotelBookings').insertOne({owner, credit_num, csv, exp});
-   /* await conn.collection('hotelBookings').updateOne(
-        { bookingId },
-        {
-            $push: {
-                owner, credit_num, csv, exp
-            }
-        }
-    ) */
+    return payment_processed;
+  
 }
 
 async function getListItems(username) {
