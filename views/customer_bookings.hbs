@@ -4,7 +4,6 @@
     <ul>
         <li>
         {{#each items}}
-        <input type="checkbox" id="{{this}}" name="null" value="{{this}}">
             <div>Status: {{this.bookingStatus}}</div>
             <div>Room: {{this.roomId}}</div>
             <div>Size: {{this.roomSize}}</div>
@@ -18,6 +17,10 @@
             </div>
             <div>Services: {{this.services}}</div>
             <div>Booked From: {{this.startDate}} - {{this.endDate}}</div>
+            {{!-- <button type="submit" name="cancel" value="{{this.bookingId}}" onclick="myFunction()">Cancel</button> --}}
+            <button name="Cancel" value="{{this.roomId}}" type="submit">
+                    Cancel
+                </button>
     </li>
     {{/each}}
 {{!--         <li>
@@ -37,7 +40,7 @@
             <label for="booking4">[CANCELLED] Room 222 Price: $2000 Checkin: March 28, 2021 Checkout: March 30, 2021 Service(s): Pet Hotel </label>
         </li> --}}
     </ul>
-    <input value="Cancel Booking" type="submit">
+    
     <br>
     <br>
 </form>

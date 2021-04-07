@@ -116,15 +116,15 @@ router.get('/cust', async function(req, res){
   });
 });
 
-//router.post('/', async function(req, res){
-  //var {username} = req.session;
+router.post('/bookings', async function(req, res){
+  console.log('Cancelling booking')
 
-  //if (req.body.cancel) {
-    //await db.cancelBooking(username, req.body.cancel);
-  //}
+  if (req.body) {
+    await db.cancelBooking(req.body);
+  }
 
-  //res.redirect('/');
-//});
+  res.render('customer_bookings', { title: 'My Bookings'})
+});
 
 router.post('/logout', async function(req, res){
   delete req.session.username;

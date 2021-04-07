@@ -212,57 +212,29 @@ async function getBookings(username){
     return arr;
 }
 
-
-
-async function getCustomerRooms(username){
+async function cancelBooking(parameters){
+    console.log('Cancelling...')
     var conn = await connect();
-    var user = await conn.collection('customers').findOne({username});
-    var roomArr = [];
+    var booking = await conn.collection('hotelBookings').findOne({bookingId: parameters.bookingId});
 
-    var roomId = 0;
-    let i;
-    for(i = 0;i < user.bookedRooms.length;i++){
-        roomId = user.bookedRooms[i];
-        var room = await conn.collection('hotelRooms').findOne({roomId});
-        roomArr.push(room);
-    }
-    
-    return roomArr;
-}
-
-async function cancelBooking(username, roomId){
-    var conn = await connect();
-    var user = await conn.collection('customers').findOne({username});
-    var room = await conn.collection('hotelRooms').findOne({roomId});
-    var newBookedRooms = user.bookedRooms;
-
-    roomId = parseInt(roomId, 10);
+    await conn.collection('hotelBookings').updateOne(
+        {bookingId: parameters.bookingId},
+        {
+            $set: {
+                bookingStatus: 'Canceled',
+            }
+        }
+    )
 
     await conn.collection('hotelRooms').updateOne(
-        {roomId},
+        {_id: booking.room},
         {
             $set: {
                 isBooked: false,
             }
         }
     )
-
-    let i;
-    for(i=0;i<newBookedRooms.length;i++){
-        if(newBookedRooms[i] === roomId){
-            newBookedRooms.splice(i, 1);
-            break;
-        }
-    }
-
-    await conn.collection('customers').updateOne(
-        {username},
-        {
-            $set: {
-                bookedRooms: newBookedRooms,
-            }
-        }
-    )
+    
 }
 
 module.exports = {
@@ -271,7 +243,6 @@ module.exports = {
     searchRooms,
     login,
     register,
-    getCustomerRooms,
     cancelBooking,
     getBookings
 }
