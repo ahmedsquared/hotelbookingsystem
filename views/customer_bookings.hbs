@@ -17,10 +17,9 @@
             </div>
             <div>Services: {{this.services}}</div>
             <div>Booked From: {{this.startDate}} - {{this.endDate}}</div>
-            {{!-- <button type="submit" name="cancel" value="{{this.bookingId}}" onclick="myFunction()">Cancel</button> --}}
-            <button name="Cancel" value="{{this.roomId}}" type="submit">
+             <button type="submit" name="bookings" value="{{this.bookingId}}">
                     Cancel
-                </button>
+            </button> 
     </li>
     {{/each}}
 {{!--         <li>

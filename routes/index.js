@@ -119,8 +119,8 @@ router.get('/cust', async function(req, res){
 router.post('/bookings', async function(req, res){
   console.log('Cancelling booking')
 
-  if (req.body) {
-    await db.cancelBooking(req.body);
+  if (req.body.cancel) {
+    await db.cancelBooking(req.body.cancel);
   }
 
   res.render('customer_bookings', { title: 'My Bookings'})
