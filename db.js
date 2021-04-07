@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url = 'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
+var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 
 var db = null;
@@ -53,12 +53,12 @@ async function searchRooms(parameters) {
     return availableResults;
 }
 
-async function payment_info(username) {
+async function payment_info(username, owner, credit_num, csv, exp) {
     var conn = await connect();
     //Store user if exist into existingUser var
     var existingUser = await conn.collection('users').findOne({ username });
     
-        await conn.collection('users').insertOne({ username });
+        await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
     if(existingUser == null) {
     }
 }
@@ -72,20 +72,21 @@ async function enter_payment_info(username){
     }
 }
 
-async function add_payment_info(username, credit_num, csv) {
+async function check_payment_info(username, owner, credit_num, csv, exp) {
+   
     var conn = await connect();
-
-    await conn.collection('users').updateOne(
-        { username },
-        {
-            $push: {
-                list: {
-                    $each: [credit_num, csv]
-                }
-
-            }
-        }
-    )
+    var user = await conn.collection('users').findOne({username});
+    var payment_processed = 0;
+    if (user.owner == owner && user.credit_num == credit_num && user.csv == csv && user.exp == exp) {
+        console.log('Success Payment Match:\n');
+        payment_processed = 1;
+    }
+    else {
+        throw new Error("Payment Information Mismatch!");
+        payment_processed = 0;
+    }
+    return payment_processed;
+  
 }
 
 async function getListItems(username) {
@@ -173,6 +174,7 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
     
     await conn.collection('hotelBookings').insertOne({bookingId, bookingStatus, room: roomIdent._id, services, totalPrice, customer, startDate, endDate, timestamp});
 
+
     existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
     const thisbookingid = existingBooking._id;
     await conn.collection('users').updateOne(
@@ -192,6 +194,7 @@ async function getBookings(username){
 
     var room_ref = 0;
     let i;
+
     if (user.bookings != null){
         arr = Array.from(Array(user.bookings.length));
         for(i = 0;i < user.bookings.length;i++){
@@ -234,7 +237,6 @@ async function cancelBooking(parameters){
             }
         }
     )
-    
 }
 
 module.exports = {
@@ -249,3 +251,6 @@ module.exports = {
 
 //addRoom(5, 2, "Double", "Large", "yes", "South", 900);
 //addBooking(5, "Confirmed", 5, "BabyCrib", 800, "Jared", "04-02-2021", "04-05-2021", Date.now());
+
+//add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
+//payment_info("Sam", "Sam", 456192395487, 992, "02-20");

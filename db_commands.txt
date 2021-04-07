@@ -1,3 +1,4 @@
+//payment_info("Sam", "Sam", 456192395487, 992, "02-20")
 //addRoom(1, 1, "King", "Small", "yes", "North", 600);
 //addRoom(2, 1, "King", "Medium", "no", "West", 800);
 //addRoom(3, 1, "Queen", "Medium", "no", "West", 600);
