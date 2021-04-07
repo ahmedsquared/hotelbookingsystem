@@ -173,69 +173,84 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
     );
     
     await conn.collection('hotelBookings').insertOne({bookingId, bookingStatus, room: roomIdent._id, services, totalPrice, customer, startDate, endDate, timestamp});
+
+
+    existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
+    const thisbookingid = existingBooking._id;
+    await conn.collection('users').updateOne(
+        { username: customer },
+        {
+            $push: {
+                bookings: thisbookingid
+            }
+        }
+    )
 }
 
-module.exports = {
-    url,
-    check_payment_info,
-    searchRooms,
-    login,
-    register,
-    getCustomerRooms,
-    cancelBooking
-}
-async function getCustomerRooms(username){
+async function getBookings(username){
     var conn = await connect();
-    var user = await conn.collection('customers').findOne({username});
-    var roomArr = [];
+    var user = await conn.collection('users').findOne({username});
+    var arr = [];
 
-    var roomId = 0;
+    var room_ref = 0;
     let i;
-    if (user && user.bookedRooms && user.bookedRooms) {
-        for(i = 0; i < user.bookedRooms.length; i++){
-            roomId = user.bookedRooms[i];
-            var room = await conn.collection('hotelRooms').findOne({roomId});
-            roomArr.push(room);
+
+    if (user.bookings != null){
+        arr = Array.from(Array(user.bookings.length));
+        for(i = 0;i < user.bookings.length;i++){
+            bookingId = user.bookings[i];
+            var booking = await conn.collection('hotelBookings').findOne({_id: bookingId});
+            room_ref = booking.room;
+            var room = await conn.collection('hotelRooms').findOne({_id: room_ref});
+            arr[i] = booking;
+            arr[i].roomId = room.roomId;
+            arr[i].numBeds = room.numBeds;
+            arr[i].bedSize = room.bedSize;
+            arr[i].roomSize = room.roomSize;
+            arr[i].hasBalcony = room.hasBalcony;
+            arr[i].facesDirection = room.facesDirection;
         }
     }
-    
-    return roomArr;
+    console.log(arr);
+    return arr;
 }
 
-async function cancelBooking(username, roomId){
+async function cancelBooking(parameters){
+    console.log('Cancelling...')
     var conn = await connect();
-    var user = await conn.collection('customers').findOne({username});
-    var room = await conn.collection('hotelRooms').findOne({roomId});
-    var newBookedRooms = user.bookedRooms;
+    var booking = await conn.collection('hotelBookings').findOne({bookingId: parameters.bookingId});
 
-    roomId = parseInt(roomId, 10);
+    await conn.collection('hotelBookings').updateOne(
+        {bookingId: parameters.bookingId},
+        {
+            $set: {
+                bookingStatus: 'Canceled',
+            }
+        }
+    )
 
     await conn.collection('hotelRooms').updateOne(
-        {roomId},
+        {_id: booking.room},
         {
             $set: {
                 isBooked: false,
             }
         }
     )
-
-    let i;
-    for(i=0;i<newBookedRooms.length;i++){
-        if(newBookedRooms[i] === roomId){
-            newBookedRooms.splice(i, 1);
-            break;
-        }
-    }
-
-    await conn.collection('customers').updateOne(
-        {username},
-        {
-            $set: {
-                bookedRooms: newBookedRooms,
-            }
-        }
-    )
 }
 
+module.exports = {
+    url,
+    add_payment_info,
+    searchRooms,
+    login,
+    register,
+    cancelBooking,
+    getBookings
+}
+
+//addRoom(5, 2, "Double", "Large", "yes", "South", 900);
+//addBooking(5, "Confirmed", 5, "BabyCrib", 800, "Jared", "04-02-2021", "04-05-2021", Date.now());
+
 //add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
-//payment_info("Sam", "Sam", 456192395487, 992, "02-20")
+//payment_info("Sam", "Sam", 456192395487, 992, "02-20");

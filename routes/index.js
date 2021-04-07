@@ -9,9 +9,36 @@ router.get('/payment', async function(req, res) {
 });
 
 /* GET home page. */
-//router.get('/', function(req, res, next) {
-//  res.render('customer_page', { title: 'Customer Page' });
-//});
+router.get('/', function(req, res, next) {
+  res.redirect('/login');
+});
+
+//Customer home page 
+router.get('/customer', function(req, res, next) {
+  var {username} = req.session;
+  res.render('customer_home', { title: 'Customer Page' , username });
+});
+
+//Customer Bookings
+/* router.get('/bookings', function(req, res, next) {
+  var {username} = req.session;
+  res.render('customer_bookings', { title: 'My Bookings' , username });
+}); */
+
+router.get('/bookings', async function(req, res){
+  var {username} = req.session;
+  res.render('customer_bookings', {
+    title: "My Bookings",
+    username,
+    items: await db.getBookings(username),
+  });
+});
+
+//Admin home page 
+router.get('/admin', function(req, res, next) {
+  var {username} = req.session;
+  res.render('admin_home', { title: 'Admin Page' , username });
+});
 
 router.post('/payment', async function(req, res){
   //pull variables from request, if don't exist, undefined
@@ -55,18 +82,40 @@ router.get('/login', async function(req, res){
 
 router.post('/login', async function(req, res){
   var {username, password, register} = req.body;
-  console.log('logging in ...', username);
+  
 
   if (register){
     await db.register(username, password);
   }else{
+    console.log('logging in ...', username);
     await db.login(username, password);
   }
 
   req.session.username = username;
-  res.redirect('/');
+
+  if (username == 'Admin'){
+    res.redirect('/admin');
+  }
+  else{
+    res.redirect('/customer');
+  }
+  
 });
-router.get('/', async function(req, res){
+
+function ensureLoggedIn(req, res, next){
+  console.log('Ensure logged in')
+  if (!req.session.username){
+    console.log('Not logged in')
+    res.redirect('/login');
+  }
+  else{
+    next();
+  }
+}
+
+router.use(ensureLoggedIn);
+
+router.get('/cust', async function(req, res){
   var {username} = req.session;
   res.render('index', {
     title: "Account",
@@ -75,18 +124,32 @@ router.get('/', async function(req, res){
   });
 });
 
-router.post('/', async function(req, res){
-  var {username} = req.session;
+router.post('/bookings', async function(req, res){
+  console.log('Cancelling booking')
 
   if (req.body.cancel) {
-    await db.cancelBooking(username, req.body.cancel);
+    await db.cancelBooking(req.body.cancel);
   }
 
-  res.redirect('/');
+  res.render('customer_bookings', { title: 'My Bookings'})
 });
 
 router.post('/logout', async function(req, res){
-  req.session.username = '';
-  res.redirect('/login');
+  delete req.session.username;
+  res.redirect('/');
 });
+
+router.post('/back_customer', async function(req, res){
+  res.redirect('/customer');
+});
+
+router.post('/to_bookings', async function(req, res){
+  res.redirect('/bookings');
+});
+
+router.post('/to_search', async function(req, res){
+  res.redirect('/search');
+});
+
+
 module.exports = router;

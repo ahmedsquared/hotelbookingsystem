@@ -1,8 +1,28 @@
-<h1>Customer Page</h1>
-<h2>My Bookings</h2>
-<form>
+
+<h1>{{username}}'s Bookings</h1>
+<form="post">
     <ul>
         <li>
+        {{#each items}}
+            <div>Status: {{this.bookingStatus}}</div>
+            <div>Room: {{this.roomId}}</div>
+            <div>Size: {{this.roomSize}}</div>
+            <div>Beds: {{this.numBeds}} {{this.bedSize}}</div>
+            <div>Total Price: ${{this.totalPrice}}</div>
+            <div>Faces: {{this.facesDirection}}</div>
+            <div>
+                {{#if this.hasBalcony}}Has Balcony
+                {{else}}No Balcony
+                {{/if}}
+            </div>
+            <div>Services: {{this.services}}</div>
+            <div>Booked From: {{this.startDate}} - {{this.endDate}}</div>
+             <button type="submit" name="bookings" value="{{this.bookingId}}">
+                    Cancel
+            </button> 
+    </li>
+    {{/each}}
+{{!--         <li>
             <input type="checkbox" id="booking1" name="booking1" value="booking1"> 
             <label for="booking1">[CONFIRMED] Room 1 Price: $500 Checkin: April 4, 2021 Checkout: April 10, 2021 Service(s): None </label>
         </li>
@@ -17,10 +37,13 @@
         <li>
             <input type="checkbox" id="booking4" name="booking4" value="booking4"> 
             <label for="booking4">[CANCELLED] Room 222 Price: $2000 Checkin: March 28, 2021 Checkout: March 30, 2021 Service(s): Pet Hotel </label>
-        </li>
+        </li> --}}
     </ul>
-    <input value="Cancel Booking" type="submit">
+    
     <br>
     <br>
+</form>
+
+<form method="post" action="back_customer">
     <input value="Back" type="submit">
 </form>
