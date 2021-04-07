@@ -32,6 +32,8 @@ async function searchRooms(parameters) {
         const roomObj = {
             room: ObjectId(result._id),
             $and: [
+                {bookingStatus: {$ne: 'Canceled'}},
+                {bookingStatus: {$ne: 'Cancelled'}},
                 {
                     startDate: {
                         $lte: new Date(parameters.endDate)
