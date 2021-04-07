@@ -80,6 +80,16 @@ async function display_price(roomId) {
     return room.maxPrice;
 }
 
+async function calc_tax(subtotal) {
+    var tax = subtotal * 0.13;
+    return tax.toFixed(2); //rounded to 2 decimals
+}
+
+async function calc_total(subtotal) {
+    var total = subtotal * 1.13;
+    return total.toFixed(2); //rounded to 2 decimals
+}
+
 async function enter_payment_info(username){
     var conn = await connect();
     var user = await conn.collection('users').findOne({ username });
@@ -260,6 +270,8 @@ module.exports = {
     url,
     check_payment_info,
     display_price,
+    calc_tax,
+    calc_total,
     searchRooms,
     login,
     register,
