@@ -198,8 +198,8 @@ async function getBookings(username){
     if (user.bookings != null){
         arr = Array.from(Array(user.bookings.length));
         for(i = 0;i < user.bookings.length;i++){
-            bookingId = user.bookings[i];
-            var booking = await conn.collection('hotelBookings').findOne({_id: bookingId});
+            booking_ref = user.bookings[i];
+            var booking = await conn.collection('hotelBookings').findOne({_id: booking_ref});
             room_ref = booking.room;
             var room = await conn.collection('hotelRooms').findOne({_id: room_ref});
             arr[i] = booking;
@@ -215,13 +215,14 @@ async function getBookings(username){
     return arr;
 }
 
-async function cancelBooking(parameters){
-    console.log('Cancelling...')
+async function cancelBooking(parameter){
     var conn = await connect();
-    var booking = await conn.collection('hotelBookings').findOne({bookingId: parameters.bookingId});
+    var bookingId = parseInt(parameter);
+    var booking = await conn.collection('hotelBookings').findOne({bookingId});
+    console.log('Booking: ' + booking);
 
     await conn.collection('hotelBookings').updateOne(
-        {bookingId: parameters.bookingId},
+        {bookingId},
         {
             $set: {
                 bookingStatus: 'Canceled',

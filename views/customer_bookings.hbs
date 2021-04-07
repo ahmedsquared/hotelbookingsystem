@@ -1,6 +1,6 @@
 
 <h1>{{username}}'s Bookings</h1>
-<form="post">
+<form method="post">
     <ul>
         <li>
         {{#each items}}
@@ -17,11 +17,12 @@
             </div>
             <div>Services: {{this.services}}</div>
             <div>Booked From: {{this.startDate}} - {{this.endDate}}</div>
-             <button type="submit" name="bookings" value="{{this.bookingId}}">
+             <button type="submit" name="cancel" value="{{this.bookingId}}">
                     Cancel
             </button> 
+            
+        {{/each}}
     </li>
-    {{/each}}
     </ul>
     
     <br>
