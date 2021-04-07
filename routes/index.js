@@ -5,7 +5,9 @@ var db = require("../db"); //import database
 var results = [];
 
 router.get('/payment', async function(req, res) {
-  res.render('payment', {title: 'Payment Summary'})
+  price = await db.display_price(1); //req.session.roomId
+  res.render('payment', { title: 'Payment Summary', price: price});
+  //res.render('payment', {title: 'Payment Summary'})
 });
 
 /* GET home page. */

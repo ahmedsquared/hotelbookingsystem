@@ -74,6 +74,12 @@ async function payment_info(username, owner, credit_num, csv, exp) {
     }
 }
 
+async function display_price(roomId) {
+    var conn = await connect();
+    var room = await conn.collection('hotelRooms').findOne({ roomId });
+    return room.maxPrice;
+}
+
 async function enter_payment_info(username){
     var conn = await connect();
     var user = await conn.collection('users').findOne({ username });
@@ -253,6 +259,7 @@ async function cancelBooking(parameters){
 module.exports = {
     url,
     check_payment_info,
+    display_price,
     searchRooms,
     login,
     register,
