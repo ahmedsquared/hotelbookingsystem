@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url = 'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
+var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 
 var db = null;
@@ -58,8 +58,19 @@ async function payment_info(username, owner, credit_num, csv, exp) {
     //Store user if exist into existingUser var
     var existingUser = await conn.collection('users').findOne({ username });
     
-        await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
+        //await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
     if(existingUser == null) {
+        await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
+    }
+    else {
+        await conn.collection('users').updateOne(
+            {username},
+            {
+                $set: {
+                    owner, credit_num, csv, exp 
+                }
+            }
+        )
     }
 }
 
@@ -253,4 +264,4 @@ module.exports = {
 //addBooking(5, "Confirmed", 5, "BabyCrib", 800, "Jared", "04-02-2021", "04-05-2021", Date.now());
 
 //add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
-//payment_info("Sam", "Sam", 456192395487, 992, "02-20");
+payment_info("colin2", "colintwo", 456192395487, 992, "02-20");
