@@ -172,17 +172,48 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
     );
     
     await conn.collection('hotelBookings').insertOne({bookingId, bookingStatus, room: roomIdent._id, services, totalPrice, customer, startDate, endDate, timestamp});
+
+    existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
+    const thisbookingid = existingBooking._id;
+    await conn.collection('users').updateOne(
+        { username: customer },
+        {
+            $push: {
+                bookings: thisbookingid
+            }
+        }
+    )
 }
 
-module.exports = {
-    url,
-    add_payment_info,
-    searchRooms,
-    login,
-    register,
-    getCustomerRooms,
-    cancelBooking
+async function getBookings(username){
+    var conn = await connect();
+    var user = await conn.collection('users').findOne({username});
+    var arr = [];
+
+    var room_ref = 0;
+    let i;
+    if (user.bookings != null){
+        arr = Array.from(Array(user.bookings.length));
+        for(i = 0;i < user.bookings.length;i++){
+            bookingId = user.bookings[i];
+            var booking = await conn.collection('hotelBookings').findOne({_id: bookingId});
+            room_ref = booking.room;
+            var room = await conn.collection('hotelRooms').findOne({_id: room_ref});
+            arr[i] = booking;
+            arr[i].roomId = room.roomId;
+            arr[i].numBeds = room.numBeds;
+            arr[i].bedSize = room.bedSize;
+            arr[i].roomSize = room.roomSize;
+            arr[i].hasBalcony = room.hasBalcony;
+            arr[i].facesDirection = room.facesDirection;
+        }
+    }
+    console.log(arr);
+    return arr;
 }
+
+
+
 async function getCustomerRooms(username){
     var conn = await connect();
     var user = await conn.collection('customers').findOne({username});
@@ -233,3 +264,17 @@ async function cancelBooking(username, roomId){
         }
     )
 }
+
+module.exports = {
+    url,
+    add_payment_info,
+    searchRooms,
+    login,
+    register,
+    getCustomerRooms,
+    cancelBooking,
+    getBookings
+}
+
+//addRoom(5, 2, "Double", "Large", "yes", "South", 900);
+//addBooking(5, "Confirmed", 5, "BabyCrib", 800, "Jared", "04-02-2021", "04-05-2021", Date.now());

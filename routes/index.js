@@ -10,7 +10,7 @@ router.get('/payment', async function(req, res) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('admin_home', { title: 'Admin Home Page' });
+  res.redirect('/login');
 });
 
 //Customer home page 
@@ -20,9 +20,18 @@ router.get('/customer', function(req, res, next) {
 });
 
 //Customer Bookings
-router.get('/bookings', function(req, res, next) {
+/* router.get('/bookings', function(req, res, next) {
   var {username} = req.session;
   res.render('customer_bookings', { title: 'My Bookings' , username });
+}); */
+
+router.get('/bookings', async function(req, res){
+  var {username} = req.session;
+  res.render('customer_bookings', {
+    title: "My Bookings",
+    username,
+    items: await db.getBookings(username),
+  });
 });
 
 //Admin home page 
