@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
+var url = 'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 
 var db = null;
@@ -139,7 +139,7 @@ async function login(username, password){
     }
 }
 
-async function addRoom(roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, maxPrice){
+async function addRoom(roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice){
 
     var conn = await connect();
     var roomExists = await conn.collection('hotelRooms').findOne({roomId});
@@ -149,7 +149,7 @@ async function addRoom(roomId, numBeds, bedSize, roomSize, hasBalcony, facesDire
         throw new Error('Room already exists.');
     }
 
-    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, maxPrice, isBooked});
+    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice, isBooked});
 }
 
 async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice, customer, startDate, endDate, timestamp){
@@ -241,7 +241,7 @@ async function cancelBooking(parameters){
 
 module.exports = {
     url,
-    add_payment_info,
+    //add_payment_info,
     searchRooms,
     login,
     register,
@@ -254,3 +254,15 @@ module.exports = {
 
 //add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
 //payment_info("Sam", "Sam", 456192395487, 992, "02-20");
+
+
+//addRoom(1, 1, "King", "Small", "yes", "North", 600);
+//addRoom(2, 1, "King", "Medium", "no", "West", 800);
+//addRoom(3, 1, "Queen", "Medium", "no", "West", 600);
+//addRoom(4, 2, "Twin", "Medium", "yes", "East", 500);
+//addRoom(5, 2, "Double", "Large", "yes", "South", 900);
+
+//addBooking(1, "Confirmed", 2, "LateCheckout", 1000, "Jared", new Date("2021-04-02"), new Date("2021-04-05"), Date.now());
+//addBooking(2, "Confirmed", 3, "PetHotel", 900, "Jared", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
+//addBooking(3, "Confirmed", 1, "PetHotel", 800, "Colin", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
+//addBooking(4, "Confirmed", 2, "BabyCrib", 800, "Colin", new Date("2021-02-02"), new Date("2021-04-05"), Date.now());

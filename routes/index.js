@@ -125,13 +125,18 @@ router.get('/cust', async function(req, res){
 });
 
 router.post('/bookings', async function(req, res){
+  var {username} = req.session;
   console.log('Cancelling booking')
 
   if (req.body.cancel) {
     await db.cancelBooking(req.body.cancel);
   }
-
-  res.render('customer_bookings', { title: 'My Bookings'})
+  
+  res.render('customer_bookings', {
+    title: "My Bookings",
+    username,
+    items: await db.getBookings(username),
+  });
 });
 
 router.post('/logout', async function(req, res){

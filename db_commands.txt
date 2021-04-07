@@ -4,7 +4,7 @@
 //addRoom(3, 1, "Queen", "Medium", "no", "West", 600);
 //addRoom(4, 2, "Twin", "Medium", "yes", "East", 500);
 //addRoom(5, 2, "Double", "Large", "yes", "South", 900);
-//addBooking(1, "Confirmed", 2, "LateCheckout", 1000, "Jared", "04-02-2021", "04-05-2021", Date.now());
-//addBooking(2, "Confirmed", 3, "PetHotel", 900, "Jared", "04-07-2021", "04-10-2021", Date.now());
-//addBooking(3, "Confirmed", 1, "PetHotel", 800, "Colin", "04-07-2021", "04-10-2021", Date.now());
-//addBooking(4, "Confirmed", 2, "BabyCrib", 800, "Colin", "04-02-2021", "04-05-2021", Date.now());
+//addBooking(1, "Confirmed", 2, "LateCheckout", 1000, "Jared", new Date("2021-04-02"), new Date("2021-04-05"), Date.now());
+//addBooking(2, "Confirmed", 3, "PetHotel", 900, "Jared", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
+//addBooking(3, "Confirmed", 1, "PetHotel", 800, "Colin", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
+//addBooking(4, "Confirmed", 2, "BabyCrib", 800, "Colin", new Date("2021-02-02"), new Date("2021-04-05"), Date.now());
