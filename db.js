@@ -93,8 +93,8 @@ async function check_payment_info(username, owner, credit_num, csv, exp) {
         payment_processed = 1;
     }
     else {
-        throw new Error("Payment Information Mismatch!");
         payment_processed = 0;
+        throw new Error("Payment Information Mismatch!");
     }
     return payment_processed;
   
@@ -264,4 +264,4 @@ module.exports = {
 //addBooking(5, "Confirmed", 5, "BabyCrib", 800, "Jared", "04-02-2021", "04-05-2021", Date.now());
 
 //add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
-payment_info("colin2", "colintwo", 456192395487, 992, "02-20");
+//payment_info("colin2", "colintwo", 456192395487, 992, "02-20");
