@@ -241,7 +241,7 @@ async function cancelBooking(parameters){
 
 module.exports = {
     url,
-    add_payment_info,
+    check_payment_info,
     searchRooms,
     login,
     register,
