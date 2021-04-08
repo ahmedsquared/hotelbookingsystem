@@ -1,0 +1,100 @@
+<link rel="stylesheet" type="text/css" href="../public/stylesheets/searchView.css" />
+<section class="search-view">
+    <h1>Add Rooms</h1>
+    <div class="search-view-content">
+        <form method="post" class="search-view-form">
+            <div class="form-row">
+                <label for="numBeds">Number of Beds:</label>
+                <input name="numBeds" type="number" min="1" value="1" class="small-input">
+            </div>
+
+            <div class="form-row">
+                <label for="bedSize">Bed Size:</label>
+                <select name="bedSize" class="small-input">
+                    <option>King</option>
+                    <option selected="selected">Queen</option>
+                    <option>Double</option>
+                    <option>Twin</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="roomSize">Room Size:</label>
+                <select name="roomSize" class="small-input">
+                    <option>Small</option>
+                    <option>Medium</option>
+                    <option>Large</option>
+                    <option>Penthouse</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="hasBalcony">Balcony:</label>
+                <select name="hasBalcony" class="small-input">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="facesDirection">Faces Direction:</label>
+                <select name="facesDirection" class="small-input">
+                    <option>North</option>
+                    <option>East</option>
+                    <option>South</option>
+                    <option>West</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="maxPrice">Maximum Price:</label>
+                <input name="maxPrice" type="number" min="0" class="small-input">
+            </div>
+
+            <div class="form-row">
+                <div></div>
+                <button type="submit" name="add">Add</button>
+                <div></div>
+            </div>
+        </form>
+
+        </br>
+        <div class="results-container">
+            {{#each results}}
+            <div class="result-card">
+                <div class="result-card-title">Room {{this.roomId}}</div>
+                <div class="result-card-line">
+                    <div>Size:</div>
+                    <div>{{this.roomSize}}</div>
+                </div>
+                <div class="result-card-line">
+                    <div>Beds:</div>
+                    <div>{{this.numBeds}} {{this.bedSize}}</div>
+                </div>
+                <div class="result-card-line">
+                    <div>Base Price:</div>
+                    <div>${{this.basePrice}}</div>
+                </div>
+                <div class="result-card-line">
+                    <div>Faces:</div>
+                    <div>{{this.facesDirection}}</div>
+                </div>
+                <div class="result-card-line">
+                    {{#if this.hasBalcony}}Has Balcony
+                    {{else}}No Balcony
+                    {{/if}}
+                </div>
+                <div class="result-card-line">
+                    <div></div>
+                    <button>Book</button>
+                    <div></div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+<form method="post" action="back_admin">
+    <input value="Back" type="submit">
+</form>
