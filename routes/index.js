@@ -6,8 +6,10 @@ var results = [];
 
 router.get('/payment', async function(req, res) {
   price = await db.display_price(1); //req.session.roomId
-  tax = await db.calc_tax(price);
-  total = await db.calc_total(price);
+  service = await db.calc_services(req.session.serviceId);
+  subtotal = price + service;
+  tax = await db.calc_tax(subtotal);
+  total = await db.calc_total(subtotal);
   res.render('payment', { title: 'Payment Summary', price: price, tax: tax, total: total});
   //res.render('payment', {title: 'Payment Summary'})
 });
