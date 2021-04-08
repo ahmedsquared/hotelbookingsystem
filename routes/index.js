@@ -107,9 +107,34 @@ router.get('/search', function(req, res, next) {
 });
 
 router.post('/search', async function(req, res) {
-  results = await db.searchRooms(req.body);
-  res.render('searchView', { title: 'Search Results', results: results })
+  if (req.body.book) {
+    console.log(req.body.book);
+  }
+  else {
+    results = await db.searchRooms(req.body);
+    res.render('searchView', { title: 'Search Results', results: results })
+  }
 });
+
+router.post('/book_room', async function (req, res) {
+  var roomToBookId = req.body.book;
+  var availableServices = await db.getServices();
+  res.render('chooseServices', {title: 'Choose Services', roomToBookId, availableServices})
+})
+
+router.post('/confirm_services', async function (req, res) {
+  const availableServices = req.body;
+  var selectedServices = [];
+  for (const serviceId in availableServices) {
+    if (availableServices[serviceId] == 'on') {
+      selectedServices.push(serviceId);
+    }
+  }
+  console.log('Selected Services: ', selectedServices);
+  //TODO Colin 
+  // res.render('INSERT_VIEW_HERE', {title: 'INSERT_TITLE_HERE', selectedServices});
+});
+
 
 router.get('/login', async function(req, res){
   res.render('login', {title: 'Login'});
