@@ -9,3 +9,6 @@
 //addBooking(2, "Confirmed", 3, "PetHotel", 900, "Jared", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
 //addBooking(3, "Confirmed", 1, "PetHotel", 800, "Colin", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
 //addBooking(4, "Confirmed", 2, "BabyCrib", 800, "Colin", new Date("2021-02-02"), new Date("2021-04-05"), Date.now());
+//addServices("lateCheckout", 20);
+//addServices("babyCrib", 15);
+//addServices("petHotel", 50);
