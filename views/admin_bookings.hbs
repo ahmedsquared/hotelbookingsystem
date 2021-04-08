@@ -1,0 +1,61 @@
+<link rel="stylesheet" type="text/css" href="../public/stylesheets/customer_bookings.css" />
+<section class="bookings-view">
+    <h1>All Bookings</h1>
+    <div class="bookings-view-content">
+        <div class="bookings-container">
+            {{#each items}}
+            <div class="bookings-card">
+                <div class="bookings-card-title">Room {{this.roomId}}</div>
+                <div class="bookings-card-line">
+                    <div>Status:</div>
+                    <div class="{{this.bookingStatus}}">{{this.bookingStatus}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Booked From:</div>
+                    <div>{{this.startDate}} - {{this.endDate}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Size:</div>
+                    <div>{{this.roomSize}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Beds:</div>
+                    <div>{{this.numBeds}} {{this.bedSize}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Total Price:</div>
+                    <div>${{this.totalPrice}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Faces:</div>
+                    <div>{{this.facesDirection}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    {{#if this.hasBalcony}}Has Balcony
+                    {{else}}No Balcony
+                    {{/if}}
+                </div>
+                <div class="bookings-card-line">
+                    <div>Services:</div>
+                    <div>{{this.services}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div></div>
+                    <div class="{{this.bookingStatus}}-button">
+                        <form method="post">
+                            <button type="submit" name="cancel" value="{{this.bookingId}}">
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+                    <div></div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+<form method="post" action="back_admin">
+    <input value="Back" type="submit">
+</form>
