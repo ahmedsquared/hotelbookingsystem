@@ -4,17 +4,6 @@ var db = require("../db"); //import database
 
 var results = [];
 
-router.get('/payment', async function(req, res) {
-  //console.log('serviceId', req.session.serviceId);
-  price = await db.display_price(req.session.roomId,req.session.days); //req.session.roomId
-  service = await db.calc_services(req.session.serviceId);
-  subtotal = price + service;
-  tax = await db.calc_tax(subtotal);
-  total = await db.calc_total(subtotal);
-  res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total});
-  //res.render('payment', {title: 'Payment Summary'})
-});
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.redirect('/login');
@@ -93,6 +82,17 @@ router.post('/admin_bookings', async function(req, res){
     title: "All Bookings",
     items: await db.getAllBookings(),
   });
+});
+
+router.get('/payment', async function(req, res) {
+  //console.log('serviceId', req.session.serviceId);
+  price = await db.display_price(req.session.roomId,req.session.days); //req.session.roomId
+  service = await db.calc_services(req.session.serviceId);
+  subtotal = price + service;
+  tax = await db.calc_tax(subtotal);
+  total = await db.calc_total(subtotal);
+  res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total});
+  //res.render('payment', {title: 'Payment Summary'})
 });
 
 router.post('/payment', async function(req, res){
