@@ -330,6 +330,16 @@ async function cancelBooking(parameter){
     )
 }
 
+async function addServices(serviceId, price) {
+    var conn = await connect();
+    var serviceExists = await conn.collection('hotelServices').findOne({serviceId});
+
+    if (serviceExists == null){
+        await conn.collection('hotelSerrvices').insertOne({serviceId, price});
+    }
+    
+}
+
 async function getServices() {
     var conn = await connect();
     var services = conn.collection('hotelServices').find({}).toArray();
@@ -353,6 +363,9 @@ module.exports = {
     getServices
 }
 
+//addServices("lateCheckout", 20);
+//addServices("babyCrib", 15);
+//addServices("petHotel", 50);
 //addRoom(5, 2, "Double", "Large", "yes", "South", 900);
 //addBooking(5, "Confirmed", 5, "BabyCrib", 800, "Jared", "04-02-2021", "04-05-2021", Date.now());
 
