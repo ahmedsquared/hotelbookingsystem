@@ -142,7 +142,6 @@ async function login(username, password){
 }
 
 async function addRoom(numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice){
-
     var conn = await connect();
     var roomId = 1;
     var roomExists = await conn.collection('hotelRooms').findOne({roomId});
@@ -152,8 +151,24 @@ async function addRoom(numBeds, bedSize, roomSize, hasBalcony, facesDirection, b
         roomId++;
         roomExists = await conn.collection('hotelRooms').findOne({roomId});
     }
-
+    
     await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice, isBooked});
+}
+
+async function getAllRooms(){
+    var conn = await connect();
+    var room = await conn.collection('hotelRooms').findOne({ roomId: 1 });
+    
+    var arr = [];
+    let i = 0;
+
+    while (room != null){
+        arr[i] = room;
+        var num = i + 2;
+        room = await conn.collection('hotelRooms').findOne({ roomId: num });
+        i++;
+    }
+    return arr;
 }
 
 async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice, customer, startDate, endDate, timestamp){
@@ -217,7 +232,6 @@ async function getBookings(username){
             arr[i].endDate = formatDate(arr[i].endDate);
         }
     }
-    console.log(arr);
     return arr;
 }
 
@@ -261,7 +275,6 @@ async function getAllBookings(){
         booking = await conn.collection('hotelBookings').findOne({ bookingId: num });
         i++;
     }
-    console.log(arr);
     return arr;
 }
 
@@ -269,7 +282,6 @@ async function cancelBooking(parameter){
     var conn = await connect();
     var bookingId = parseInt(parameter);
     var booking = await conn.collection('hotelBookings').findOne({bookingId});
-    console.log('Booking: ' + booking);
 
     await conn.collection('hotelBookings').updateOne(
         {bookingId},
@@ -298,7 +310,9 @@ module.exports = {
     register,
     cancelBooking,
     getBookings,
-    getAllBookings
+    getAllBookings,
+    getAllRooms,
+    addRoom
 }
 
 //addRoom(5, 2, "Double", "Large", "yes", "South", 900);

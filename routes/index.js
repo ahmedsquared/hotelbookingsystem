@@ -51,8 +51,21 @@ router.get('/admin', function(req, res, next) {
   res.render('admin_home', { title: 'Admin Page' , username });
 });
 
-router.get('/add_rooms', function(req, res, next) {
-  res.render('room_addition', { title: 'Add Rooms' })
+
+
+router.get('/add_rooms', async function(req, res){
+  res.render('room_addition', {
+    title: "Add Rooms",
+    items: await db.getAllRooms(),
+  });
+});
+
+router.post('/add_rooms', async function(req, res, next) {
+  await db.addRoom(req.body.numBeds, req.body.bedSize, req.body.roomSize, req.body.hasBalcony, req.body.facesDirection, req.body.basePrice);
+  res.render('room_addition', {
+    title: "Add Rooms",
+    items: await db.getAllRooms(),
+  });
 });
 
 router.get('/admin_bookings', async function(req, res){

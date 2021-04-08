@@ -47,8 +47,8 @@
             </div>
 
             <div class="form-row">
-                <label for="maxPrice">Maximum Price:</label>
-                <input name="maxPrice" type="number" min="0" class="small-input">
+                <label for="basePrice">Base Price:</label>
+                <input name="basePrice" type="number" min="0" class="small-input" value = "1000">
             </div>
 
             <div class="form-row">
@@ -60,7 +60,7 @@
 
         </br>
         <div class="results-container">
-            {{#each results}}
+            {{#each items}}
             <div class="result-card">
                 <div class="result-card-title">Room {{this.roomId}}</div>
                 <div class="result-card-line">
@@ -83,11 +83,6 @@
                     {{#if this.hasBalcony}}Has Balcony
                     {{else}}No Balcony
                     {{/if}}
-                </div>
-                <div class="result-card-line">
-                    <div></div>
-                    <button>Book</button>
-                    <div></div>
                 </div>
             </div>
             {{/each}}
