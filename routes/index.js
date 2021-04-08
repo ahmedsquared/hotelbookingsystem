@@ -5,7 +5,11 @@ var db = require("../db"); //import database
 var results = [];
 
 router.get('/payment', async function(req, res) {
-  res.render('payment', {title: 'Payment Summary'})
+  price = await db.display_price(1); //req.session.roomId
+  tax = await db.calc_tax(price);
+  total = await db.calc_total(price);
+  res.render('payment', { title: 'Payment Summary', price: price, tax: tax, total: total});
+  //res.render('payment', {title: 'Payment Summary'})
 });
 
 /* GET home page. */
@@ -98,7 +102,7 @@ router.post('/payment', async function(req, res){
     var check = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp);
     if (check == 1) {
       //create booking and redirect to user home page
-      res.redirect('/');
+      res.redirect('/customer');
     }
     else {
 //res.redirect('/payment');

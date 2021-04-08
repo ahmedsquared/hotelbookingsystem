@@ -43,7 +43,7 @@ select {
 input {
   font-family: monospace;
   outline: none;
-  border: 0;
+  border: 1;
 }
 
 option {

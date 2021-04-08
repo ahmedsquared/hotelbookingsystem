@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url = 'mongodb+srv://mathewbegg:yNDy4SfSkG5q@cluster0.lsu59.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 
 var db = null;
@@ -60,9 +60,37 @@ async function payment_info(username, owner, credit_num, csv, exp) {
     //Store user if exist into existingUser var
     var existingUser = await conn.collection('users').findOne({ username });
     
-        await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
+        //await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
     if(existingUser == null) {
+        await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
     }
+    else {
+        await conn.collection('users').updateOne(
+            {username},
+            {
+                $set: {
+                    owner, credit_num, csv, exp 
+                }
+            }
+        )
+    }
+}
+
+async function display_price(roomId) {
+    var conn = await connect();
+    var room = await conn.collection('hotelRooms').findOne({ roomId });
+    //maxPrice = room.maxPrice * multiplier
+    return room.maxPrice;
+}
+
+async function calc_tax(subtotal) {
+    var tax = subtotal * 0.13;
+    return tax.toFixed(2); //rounded to 2 decimals
+}
+
+async function calc_total(subtotal) {
+    var total = subtotal * 1.13;
+    return total.toFixed(2); //rounded to 2 decimals
 }
 
 async function enter_payment_info(username){
@@ -84,8 +112,8 @@ async function check_payment_info(username, owner, credit_num, csv, exp) {
         payment_processed = 1;
     }
     else {
-        throw new Error("Payment Information Mismatch!");
         payment_processed = 0;
+        throw new Error("Payment Information Mismatch!");
     }
     return payment_processed;
   
@@ -311,6 +339,9 @@ async function getServices() {
 module.exports = {
     url,
     check_payment_info,
+    display_price,
+    calc_tax,
+    calc_total,
     searchRooms,
     login,
     register,
