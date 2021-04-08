@@ -141,14 +141,16 @@ async function login(username, password){
     }
 }
 
-async function addRoom(roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice){
+async function addRoom(numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice){
 
     var conn = await connect();
+    var roomId = 1;
     var roomExists = await conn.collection('hotelRooms').findOne({roomId});
-
     var isBooked = false;
+
     while (roomExists != null){
-        throw new Error('Room already exists.');
+        roomId++;
+        roomExists = await conn.collection('hotelRooms').findOne({roomId});
     }
 
     await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice, isBooked});
@@ -199,7 +201,7 @@ async function getBookings(username){
 
     if (user.bookings != null){
         arr = Array.from(Array(user.bookings.length));
-        for(i = 0;i < user.bookings.length;i++){
+        for(i = 0; i < user.bookings.length; i++){
             booking_ref = user.bookings[i];
             var booking = await conn.collection('hotelBookings').findOne({_id: booking_ref});
             room_ref = booking.room;
@@ -211,7 +213,53 @@ async function getBookings(username){
             arr[i].roomSize = room.roomSize;
             arr[i].hasBalcony = room.hasBalcony;
             arr[i].facesDirection = room.facesDirection;
+            arr[i].startDate = formatDate(arr[i].startDate);
+            arr[i].endDate = formatDate(arr[i].endDate);
         }
+    }
+    console.log(arr);
+    return arr;
+}
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+async function getAllBookings(){
+    var conn = await connect();
+    var booking = await conn.collection('hotelBookings').findOne({ bookingId: 1 });
+    
+    var arr = [];
+
+    var room_ref = 0;
+    let i = 0;
+
+    while (booking != null){
+        room_ref = booking.room;
+        var room = await conn.collection('hotelRooms').findOne({_id: room_ref});
+        arr[i] = booking;
+        arr[i].roomId = room.roomId;
+        arr[i].numBeds = room.numBeds;
+        arr[i].bedSize = room.bedSize;
+        arr[i].roomSize = room.roomSize;
+        arr[i].hasBalcony = room.hasBalcony;
+        arr[i].facesDirection = room.facesDirection;
+        arr[i].startDate = formatDate(arr[i].startDate);
+        arr[i].endDate = formatDate(arr[i].endDate);
+
+        var num = i + 2;
+        booking = await conn.collection('hotelBookings').findOne({ bookingId: num });
+        i++;
     }
     console.log(arr);
     return arr;
@@ -249,7 +297,8 @@ module.exports = {
     login,
     register,
     cancelBooking,
-    getBookings
+    getBookings,
+    getAllBookings
 }
 
 //addRoom(5, 2, "Double", "Large", "yes", "South", 900);
@@ -259,7 +308,7 @@ module.exports = {
 //payment_info("Sam", "Sam", 456192395487, 992, "02-20");
 
 
-//addRoom(1, 1, "King", "Small", "yes", "North", 600);
+//addRoom(1, "King", "Small", "yes", "North", 600);
 //addRoom(2, 1, "King", "Medium", "no", "West", 800);
 //addRoom(3, 1, "Queen", "Medium", "no", "West", 600);
 //addRoom(4, 2, "Twin", "Medium", "yes", "East", 500);
