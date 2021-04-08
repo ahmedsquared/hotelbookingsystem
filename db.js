@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url = 'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
+var url = 'mongodb+srv://mathewbegg:yNDy4SfSkG5q@cluster0.lsu59.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 
 var db = null;
@@ -302,6 +302,12 @@ async function cancelBooking(parameter){
     )
 }
 
+async function getServices() {
+    var conn = await connect();
+    var services = conn.collection('hotelServices').find({}).toArray();
+    return services;
+}
+
 module.exports = {
     url,
     check_payment_info,
@@ -312,7 +318,8 @@ module.exports = {
     getBookings,
     getAllBookings,
     getAllRooms,
-    addRoom
+    addRoom,
+    getServices
 }
 
 //addRoom(5, 2, "Double", "Large", "yes", "South", 900);

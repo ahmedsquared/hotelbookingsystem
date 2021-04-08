@@ -1,0 +1,8 @@
+<p>CHOOSE SERVICES for room {{this.roomToBookId}}</p>
+<form method="post" action="confirm_services">
+    {{#each availableServices}}
+    <label for="{{this.serviceId}}">{{this.serviceId}} ${{this.price}}</label><input name="{{this.serviceId}}"
+        type="checkbox"><br />
+    {{/each}}
+    <button type="submit" name="checkout">Checkout</button>
+</form>

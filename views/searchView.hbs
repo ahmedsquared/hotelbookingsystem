@@ -1,6 +1,11 @@
 <link rel="stylesheet" type="text/css" href="../public/stylesheets/searchView.css" />
 <section class="search-view">
-    <h1>Search For Rooms</h1>
+    <h1>
+        Search For Rooms
+    </h1>
+    <form method="post" action="back_customer">
+        <button name="Back" type="submit">Back</button>
+    </form>
     <div class="search-view-content">
         <form method="post" class="search-view-form">
             <div class="form-row">
@@ -73,7 +78,7 @@
         </br>
         <div class="results-container">
             {{#each results}}
-            <div class="result-card">
+            <form method="POST" action="book_room" class="result-card">
                 <div class="result-card-title">Room {{this.roomId}}</div>
                 <div class="result-card-line">
                     <div>Size:</div>
@@ -98,10 +103,10 @@
                 </div>
                 <div class="result-card-line">
                     <div></div>
-                    <button>Book</button>
+                    <button type="submit" name="book" value="{{this.roomId}}">Book</button>
                     <div></div>
                 </div>
-            </div>
+            </form>
             {{/each}}
         </div>
     </div>
