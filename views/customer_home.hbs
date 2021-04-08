@@ -1,12 +1,13 @@
-<h1>Customer Home Page</h1>
-<h1>Welcome, {{username}}</h1>
+<h1>Welcome {{username}}</h1>
 
-<form method="post" action="to_bookings">
-    <input value="My Bookings" type="submit">
-</form>
-<form method="post" action="to_search">
-    <input value="Search Rooms" type="submit">
-</form>
-<form method="post" action="logout">
-    <input type="submit" value="Logout">
-</form>
+<div class="customer-home">
+    <form method="post" action="to_bookings">
+        <button class="big-button" value="My Bookings" type="submit">My Bookings</button>
+    </form>
+    <form method="post" action="to_search">
+        <button class="big-button" value="Search Rooms" type="submit">Search Rooms</button>
+    </form>
+    <form method="post" action="logout">
+        <button class="big-button" type="submit" value="Logout">Logout</button>
+    </form>
+</div>
