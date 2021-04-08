@@ -241,6 +241,12 @@ async function cancelBooking(parameters){
     )
 }
 
+async function getServices() {
+    var conn = await connect();
+    var services = conn.collection('hotelServices').find({}).toArray();
+    return services;
+}
+
 module.exports = {
     url,
     check_payment_info,
@@ -248,7 +254,8 @@ module.exports = {
     login,
     register,
     cancelBooking,
-    getBookings
+    getBookings,
+    getServices
 }
 
 //addRoom(5, 2, "Double", "Large", "yes", "South", 900);

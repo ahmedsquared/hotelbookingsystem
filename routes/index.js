@@ -83,19 +83,23 @@ router.post('/search', async function(req, res) {
 
 router.post('/book_room', async function (req, res) {
   var roomToBookId = req.body.book;
-  res.render('chooseServices', {title: 'Choose Services', roomToBookId})
+  var availableServices = await db.getServices();
+  res.render('chooseServices', {title: 'Choose Services', roomToBookId, availableServices})
 })
 
 router.post('/confirm_services', async function (req, res) {
-  var {lateCheckout, babyCrib, petHotel} = req.body;
-  const services = {
-    lateCheckout: lateCheckout === "on",
-    babyCrib: babyCrib === "on",
-    petHotel: petHotel === "on",
+  const availableServices = req.body;
+  var selectedServices = [];
+  for (const serviceId in availableServices) {
+    if (availableServices[serviceId] == 'on') {
+      selectedServices.push(serviceId);
+    }
   }
+  console.log('Selected Services: ', selectedServices);
   //TODO Colin 
-  // res.render('INSERT_VIEW_HERE', {title: 'INSERT_TITLE_HERE', services});
+  // res.render('INSERT_VIEW_HERE', {title: 'INSERT_TITLE_HERE', selectedServices});
 });
+
 
 router.get('/login', async function(req, res){
   res.render('login', {title: 'Login'});
