@@ -346,7 +346,7 @@ async function addServices(serviceId, price) {
     var serviceExists = await conn.collection('hotelServices').findOne({serviceId});
 
     if (serviceExists == null){
-        await conn.collection('hotelSerrvices').insertOne({serviceId, price});
+        await conn.collection('hotelServices').insertOne({serviceId, price});
     }
     
 }
@@ -363,6 +363,7 @@ module.exports = {
     display_price,
     calc_tax,
     calc_total,
+    calc_services,
     searchRooms,
     login,
     register,
