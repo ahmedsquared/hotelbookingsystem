@@ -77,11 +77,12 @@ async function payment_info(username, owner, credit_num, csv, exp) {
     }
 }
 
-async function display_price(roomId) {
+async function display_price(roomId, days) {
     var conn = await connect();
     var room = await conn.collection('hotelRooms').findOne({ roomId });
     //maxPrice = room.maxPrice * multiplier
-    return room.maxPrice;
+    var total = room.maxPrice * days;
+    return total;
 }
 
 async function calc_tax(subtotal) {
@@ -111,6 +112,16 @@ async function enter_payment_info(username){
     if (user == null) {
         throw new Error('User does not exist!');
     }
+}
+
+async function calc_days(start, end) {
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const firstDate = new Date(start);
+    const secondDate = new Date(end);
+
+    const diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
+
+    return diffDays;
 }
 
 async function check_payment_info(username, owner, credit_num, csv, exp) {
@@ -364,6 +375,7 @@ module.exports = {
     calc_tax,
     calc_total,
     calc_services,
+    calc_days,
     searchRooms,
     login,
     register,

@@ -5,9 +5,10 @@ var db = require("../db"); //import database
 var results = [];
 
 router.get('/payment', async function(req, res) {
-  price = await db.display_price(1); //req.session.roomId
-  service = await db.calc_services(req.session.serviceId);
-  subtotal = price + service;
+  console.log('serviceId', req.session.serviceId);
+  price = await db.display_price(1,req.session.days); //req.session.roomId
+  //service = await db.calc_services(req.session.serviceId);
+  subtotal = price;// + service;
   tax = await db.calc_tax(subtotal);
   total = await db.calc_total(subtotal);
   res.render('payment', { title: 'Payment Summary', price: price, tax: tax, total: total});
@@ -131,6 +132,12 @@ router.post('/search', async function(req, res) {
   }
   else {
     results = await db.searchRooms(req.body);
+    req.session.start = req.body.startDate;
+    req.session.end = req.body.endDate;
+    console.log('start date : ',req.session.start);
+    console.log('end date: ',req.session.end);
+    req.session.days = await db.calc_days(req.session.start, req.session.end);
+    console.log('days: ', req.session.days);
     res.render('searchView', { title: 'Search Results', results: results })
   }
 });
@@ -149,7 +156,9 @@ router.post('/confirm_services', async function (req, res) {
       selectedServices.push(serviceId);
     }
   }
-  console.log('Selected Services: ', selectedServices);
+  req.session.serviceId = selectedServices;
+  console.log('Selected Services: ', req.session.serviceId);
+  res.redirect('/payment');
   //TODO Colin 
   // res.render('INSERT_VIEW_HERE', {title: 'INSERT_TITLE_HERE', selectedServices});
 });
