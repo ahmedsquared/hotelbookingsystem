@@ -1,33 +1,60 @@
-
-<h1>{{username}}'s Bookings</h1>
-<form method="post">
-    <ul>
-        <li>
-        {{#each items}}
-            <div>Status: {{this.bookingStatus}}</div>
-            <div>Room: {{this.roomId}}</div>
-            <div>Size: {{this.roomSize}}</div>
-            <div>Beds: {{this.numBeds}} {{this.bedSize}}</div>
-            <div>Total Price: ${{this.totalPrice}}</div>
-            <div>Faces: {{this.facesDirection}}</div>
-            <div>
-                {{#if this.hasBalcony}}Has Balcony
-                {{else}}No Balcony
-                {{/if}}
+<link rel="stylesheet" type="text/css" href="../public/stylesheets/customer_bookings.css" />
+<section class="bookings-view">
+    <h1>{{username}}'s Bookings</h1>
+    <div class="bookings-view-content">
+        <div class="bookings-container">
+            {{#each items}}
+            <div class="bookings-card">
+                <div class="bookings-card-title">Room {{this.roomId}}</div>
+                <div class="bookings-card-line">
+                    <div>Status:</div>
+                    <div class="{{this.bookingStatus}}">{{this.bookingStatus}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Booked From:</div>
+                    <div>{{this.startDate}} - {{this.endDate}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Size:</div>
+                    <div>{{this.roomSize}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Beds:</div>
+                    <div>{{this.numBeds}} {{this.bedSize}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Total Price:</div>
+                    <div>${{this.totalPrice}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div>Faces:</div>
+                    <div>{{this.facesDirection}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    {{#if this.hasBalcony}}Has Balcony
+                    {{else}}No Balcony
+                    {{/if}}
+                </div>
+                <div class="bookings-card-line">
+                    <div>Services:</div>
+                    <div>{{this.services}}</div>
+                </div>
+                <div class="bookings-card-line">
+                    <div></div>
+                    <div class="{{this.bookingStatus}}-button">
+                        <form method="post">
+                            <button type="submit" name="cancel" value="{{this.bookingId}}">
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+                    <div></div>
+                </div>
             </div>
-            <div>Services: {{this.services}}</div>
-            <div>Booked From: {{this.startDate}} - {{this.endDate}}</div>
-             <button type="submit" name="cancel" value="{{this.bookingId}}">
-                    Cancel
-            </button> 
-            
-        {{/each}}
-    </li>
-    </ul>
-    
-    <br>
-    <br>
-</form>
+            {{/each}}
+        </div>
+    </div>
+</section>
 
 <form method="post" action="back_customer">
     <input value="Back" type="submit">
