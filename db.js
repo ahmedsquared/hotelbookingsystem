@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
+var url =  'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 
 var db = null;
@@ -173,14 +173,13 @@ async function addRoom(numBeds, bedSize, roomSize, hasBalcony, facesDirection, b
     var conn = await connect();
     var roomId = 1;
     var roomExists = await conn.collection('hotelRooms').findOne({roomId});
-    var isBooked = false;
 
     while (roomExists != null){
         roomId++;
         roomExists = await conn.collection('hotelRooms').findOne({roomId});
     }
     
-    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice, isBooked});
+    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice});
 }
 
 async function getAllRooms(){
@@ -201,7 +200,6 @@ async function getAllRooms(){
 
 async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice, customer, startDate, endDate, timestamp){
     var conn = await connect();
-    var roomCollection = await conn.collection('hotelRooms')
     var roomIdent = await conn.collection('hotelRooms').findOne({roomId});
     var existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
     
@@ -211,13 +209,6 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
     else if (roomIdent == null){
         throw new Error('Room does not exist.');
     }
-    else if (roomIdent.isBooked){
-        throw new Error('Room is already booked.');
-    }
-    roomCollection.updateOne(
-        { "roomId" : roomId},
-        {$set: {isBooked: true}}
-    );
     
     await conn.collection('hotelBookings').insertOne({bookingId, bookingStatus, room: roomIdent._id, services, totalPrice, customer, startDate, endDate, timestamp});
 
@@ -316,15 +307,6 @@ async function cancelBooking(parameter){
         {
             $set: {
                 bookingStatus: 'Canceled',
-            }
-        }
-    )
-
-    await conn.collection('hotelRooms').updateOne(
-        {_id: booking.room},
-        {
-            $set: {
-                isBooked: false,
             }
         }
     )
