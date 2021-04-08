@@ -4,6 +4,7 @@ var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
 var url = 'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
+const { RequestHeaderFieldsTooLarge } = require("http-errors");
 
 var db = null;
 async function connect(){
@@ -91,6 +92,16 @@ async function calc_tax(subtotal) {
 async function calc_total(subtotal) {
     var total = subtotal * 1.13;
     return total.toFixed(2); //rounded to 2 decimals
+}
+
+async function calc_services(serviceId) {
+    var price = 0;
+    for (var i=0; i<(serviceId.length); i++){
+        var id = serviceId[i];
+        var service = await conn.collection('hotelServices').findOne({ id });
+        price += service.price;
+    }
+    return price.toFixed(2); //rounded to 2 decimals
 }
 
 async function enter_payment_info(username){
