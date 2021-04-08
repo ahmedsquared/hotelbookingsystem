@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url = 'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
+var url = 'mongodb+srv://mathewbegg:yNDy4SfSkG5q@cluster0.lsu59.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 
 var db = null;
