@@ -6,12 +6,12 @@ var results = [];
 
 router.get('/payment', async function(req, res) {
   //console.log('serviceId', req.session.serviceId);
-  price = await db.display_price(1,req.session.days); //req.session.roomId
+  price = await db.display_price(req.session.roomId,req.session.days); //req.session.roomId
   service = await db.calc_services(req.session.serviceId);
-  subtotal = price;// + service;
+  subtotal = price + service;
   tax = await db.calc_tax(subtotal);
   total = await db.calc_total(subtotal);
-  res.render('payment', { title: 'Payment Summary', price: price, service: service, tax: tax, total: total});
+  res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total});
   //res.render('payment', {title: 'Payment Summary'})
 });
 
@@ -144,6 +144,8 @@ router.post('/search', async function(req, res) {
 
 router.post('/book_room', async function (req, res) {
   var roomToBookId = req.body.book;
+  req.session.roomId = req.body.book;
+  console.log('roomId: ', req.session.roomId);
   var availableServices = await db.getServices();
   res.render('chooseServices', {title: 'Choose Services', roomToBookId, availableServices})
 })

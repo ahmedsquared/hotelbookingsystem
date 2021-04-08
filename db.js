@@ -79,7 +79,10 @@ async function payment_info(username, owner, credit_num, csv, exp) {
 
 async function display_price(roomId, days) {
     var conn = await connect();
-    var room = await conn.collection('hotelRooms').findOne({ roomId });
+    console.log('roomIddisplay ', roomId);
+    var id = parseInt(roomId);
+    var room = await conn.collection('hotelRooms').findOne({ roomId: id });
+    console.log('room: ', room);
     //maxPrice = room.maxPrice * multiplier
     var total = room.maxPrice * days;
     return total;
@@ -102,11 +105,11 @@ async function calc_services(serviceId) {
     for (var i=0; i<(iD.length); i++){
         var serviceId = iD[i];
         var service = await conn.collection('hotelServices').findOne({ serviceId });
-        console.log('service: ', service);
+        //.log('service: ', service);
         price += service.price;
-        console.log('price: ', price);
+        //console.log('price: ', price);
     }
-    return price.toFixed(2); //rounded to 2 decimals
+    return price; //rounded to 2 decimals
 }
 
 async function enter_payment_info(username){
