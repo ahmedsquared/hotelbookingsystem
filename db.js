@@ -141,17 +141,34 @@ async function login(username, password){
     }
 }
 
-async function addRoom(roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, maxPrice){
-
+async function addRoom(numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice){
     var conn = await connect();
+    var roomId = 1;
     var roomExists = await conn.collection('hotelRooms').findOne({roomId});
-
     var isBooked = false;
-    while (roomExists != null){
-        throw new Error('Room already exists.');
-    }
 
-    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, maxPrice, isBooked});
+    while (roomExists != null){
+        roomId++;
+        roomExists = await conn.collection('hotelRooms').findOne({roomId});
+    }
+    
+    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice, isBooked});
+}
+
+async function getAllRooms(){
+    var conn = await connect();
+    var room = await conn.collection('hotelRooms').findOne({ roomId: 1 });
+    
+    var arr = [];
+    let i = 0;
+
+    while (room != null){
+        arr[i] = room;
+        var num = i + 2;
+        room = await conn.collection('hotelRooms').findOne({ roomId: num });
+        i++;
+    }
+    return arr;
 }
 
 async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice, customer, startDate, endDate, timestamp){
@@ -199,9 +216,9 @@ async function getBookings(username){
 
     if (user.bookings != null){
         arr = Array.from(Array(user.bookings.length));
-        for(i = 0;i < user.bookings.length;i++){
-            bookingId = user.bookings[i];
-            var booking = await conn.collection('hotelBookings').findOne({_id: bookingId});
+        for(i = 0; i < user.bookings.length; i++){
+            booking_ref = user.bookings[i];
+            var booking = await conn.collection('hotelBookings').findOne({_id: booking_ref});
             room_ref = booking.room;
             var room = await conn.collection('hotelRooms').findOne({_id: room_ref});
             arr[i] = booking;
@@ -211,19 +228,63 @@ async function getBookings(username){
             arr[i].roomSize = room.roomSize;
             arr[i].hasBalcony = room.hasBalcony;
             arr[i].facesDirection = room.facesDirection;
+            arr[i].startDate = formatDate(arr[i].startDate);
+            arr[i].endDate = formatDate(arr[i].endDate);
         }
     }
-    console.log(arr);
     return arr;
 }
 
-async function cancelBooking(parameters){
-    console.log('Cancelling...')
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+async function getAllBookings(){
     var conn = await connect();
-    var booking = await conn.collection('hotelBookings').findOne({bookingId: parameters.bookingId});
+    var booking = await conn.collection('hotelBookings').findOne({ bookingId: 1 });
+    
+    var arr = [];
+
+    var room_ref = 0;
+    let i = 0;
+
+    while (booking != null){
+        room_ref = booking.room;
+        var room = await conn.collection('hotelRooms').findOne({_id: room_ref});
+        arr[i] = booking;
+        arr[i].roomId = room.roomId;
+        arr[i].numBeds = room.numBeds;
+        arr[i].bedSize = room.bedSize;
+        arr[i].roomSize = room.roomSize;
+        arr[i].hasBalcony = room.hasBalcony;
+        arr[i].facesDirection = room.facesDirection;
+        arr[i].startDate = formatDate(arr[i].startDate);
+        arr[i].endDate = formatDate(arr[i].endDate);
+
+        var num = i + 2;
+        booking = await conn.collection('hotelBookings').findOne({ bookingId: num });
+        i++;
+    }
+    return arr;
+}
+
+async function cancelBooking(parameter){
+    var conn = await connect();
+    var bookingId = parseInt(parameter);
+    var booking = await conn.collection('hotelBookings').findOne({bookingId});
 
     await conn.collection('hotelBookings').updateOne(
-        {bookingId: parameters.bookingId},
+        {bookingId},
         {
             $set: {
                 bookingStatus: 'Canceled',
@@ -255,6 +316,9 @@ module.exports = {
     register,
     cancelBooking,
     getBookings,
+    getAllBookings,
+    getAllRooms,
+    addRoom,
     getServices
 }
 
@@ -263,3 +327,15 @@ module.exports = {
 
 //add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
 //payment_info("Sam", "Sam", 456192395487, 992, "02-20");
+
+
+//addRoom(1, "King", "Small", "yes", "North", 600);
+//addRoom(2, 1, "King", "Medium", "no", "West", 800);
+//addRoom(3, 1, "Queen", "Medium", "no", "West", 600);
+//addRoom(4, 2, "Twin", "Medium", "yes", "East", 500);
+//addRoom(5, 2, "Double", "Large", "yes", "South", 900);
+
+//addBooking(1, "Confirmed", 2, "LateCheckout", 1000, "Jared", new Date("2021-04-02"), new Date("2021-04-05"), Date.now());
+//addBooking(2, "Confirmed", 3, "PetHotel", 900, "Jared", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
+//addBooking(3, "Confirmed", 1, "PetHotel", 800, "Colin", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
+//addBooking(4, "Confirmed", 2, "BabyCrib", 800, "Colin", new Date("2021-02-02"), new Date("2021-04-05"), Date.now());

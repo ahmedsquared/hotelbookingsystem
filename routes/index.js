@@ -20,13 +20,24 @@ router.get('/customer', function(req, res, next) {
 });
 
 //Customer Bookings
-/* router.get('/bookings', function(req, res, next) {
-  var {username} = req.session;
-  res.render('customer_bookings', { title: 'My Bookings' , username });
-}); */
 
 router.get('/bookings', async function(req, res){
   var {username} = req.session;
+  res.render('customer_bookings', {
+    title: "My Bookings",
+    username,
+    items: await db.getBookings(username),
+  });
+});
+
+router.post('/bookings', async function(req, res){
+  var {username} = req.session;
+  console.log('Cancelling booking');
+  if (req.body.cancel) {
+    console.log(req.body);
+    await db.cancelBooking(req.body.cancel);
+  }
+  
   res.render('customer_bookings', {
     title: "My Bookings",
     username,
@@ -38,6 +49,43 @@ router.get('/bookings', async function(req, res){
 router.get('/admin', function(req, res, next) {
   var {username} = req.session;
   res.render('admin_home', { title: 'Admin Page' , username });
+});
+
+
+
+router.get('/add_rooms', async function(req, res){
+  res.render('room_addition', {
+    title: "Add Rooms",
+    items: await db.getAllRooms(),
+  });
+});
+
+router.post('/add_rooms', async function(req, res, next) {
+  await db.addRoom(req.body.numBeds, req.body.bedSize, req.body.roomSize, req.body.hasBalcony, req.body.facesDirection, req.body.basePrice);
+  res.render('room_addition', {
+    title: "Add Rooms",
+    items: await db.getAllRooms(),
+  });
+});
+
+router.get('/admin_bookings', async function(req, res){
+  var {username} = req.session;
+  res.render('admin_bookings', {
+    title: "All Bookings",
+    items: await db.getAllBookings(),
+  });
+});
+
+router.post('/admin_bookings', async function(req, res){
+  console.log('Cancelling booking');
+  if (req.body.cancel) {
+    await db.cancelBooking(req.body.cancel);
+  }
+  
+  res.render('admin_bookings', {
+    title: "All Bookings",
+    items: await db.getAllBookings(),
+  });
 });
 
 router.post('/payment', async function(req, res){
@@ -140,25 +188,6 @@ function ensureLoggedIn(req, res, next){
 
 router.use(ensureLoggedIn);
 
-router.get('/cust', async function(req, res){
-  var {username} = req.session;
-  res.render('index', {
-    title: "Account",
-    username,
-    items: await db.getCustomerRooms(username),
-  });
-});
-
-router.post('/bookings', async function(req, res){
-  console.log('Cancelling booking')
-
-  if (req.body.cancel) {
-    await db.cancelBooking(req.body.cancel);
-  }
-
-  res.render('customer_bookings', { title: 'My Bookings'})
-});
-
 router.post('/logout', async function(req, res){
   delete req.session.username;
   res.redirect('/');
@@ -174,6 +203,17 @@ router.post('/to_bookings', async function(req, res){
 
 router.post('/to_search', async function(req, res){
   res.redirect('/search');
+});
+
+router.post('/to_add', async function(req, res){
+  res.redirect('/add_rooms');
+});
+router.post('/back_admin', async function(req, res){
+  res.redirect('/admin');
+});
+
+router.post('/to__admin_bookings', async function(req, res){
+  res.redirect('/admin_bookings');
 });
 
 

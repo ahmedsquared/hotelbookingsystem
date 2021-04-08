@@ -121,3 +121,77 @@ h1 {
   text-align: center;
   margin-bottom: 20px;
 }
+
+/* Customer Bookings View */
+
+.bookings-view {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.bookings-view-content {
+  padding: 25px 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.bookings-view-form {
+  width: 350px;
+  padding: 30px;
+  background-color: #c3daff;
+}
+
+.bookings-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  font-family: monospace;
+  font-size: x-large;
+}
+
+.bookings-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.bookings-card {
+  width: 350px;
+  height: 500px;
+  padding: 15px 25px;
+  box-sizing: border-box;
+  background-color: #c3daff;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bookings-card-line {
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+}
+
+.bookings-card-title {
+  font-weight: bold;
+  font-family: monospace;
+  font-size: x-large;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
+/* Booking status text color */
+.Confirmed {
+  color: green;
+}
+
+.Canceled {
+  color: red;
+}
+.Canceled-button {
+  display: none;
+}
