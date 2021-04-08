@@ -77,6 +77,7 @@ async function payment_info(username, owner, credit_num, csv, exp) {
 async function display_price(roomId) {
     var conn = await connect();
     var room = await conn.collection('hotelRooms').findOne({ roomId });
+    //maxPrice = room.maxPrice * multiplier
     return room.maxPrice;
 }
 
