@@ -96,11 +96,15 @@ async function calc_total(subtotal) {
 }
 
 async function calc_services(serviceId) {
+    var conn = await connect();
     var price = 0;
-    for (var i=0; i<(serviceId.length); i++){
-        var id = serviceId[i];
-        var service = await conn.collection('hotelServices').findOne({ id });
+    var iD = serviceId;
+    for (var i=0; i<(iD.length); i++){
+        var serviceId = iD[i];
+        var service = await conn.collection('hotelServices').findOne({ serviceId });
+        console.log('service: ', service);
         price += service.price;
+        console.log('price: ', price);
     }
     return price.toFixed(2); //rounded to 2 decimals
 }

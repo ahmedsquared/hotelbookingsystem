@@ -5,13 +5,13 @@ var db = require("../db"); //import database
 var results = [];
 
 router.get('/payment', async function(req, res) {
-  console.log('serviceId', req.session.serviceId);
+  //console.log('serviceId', req.session.serviceId);
   price = await db.display_price(1,req.session.days); //req.session.roomId
-  //service = await db.calc_services(req.session.serviceId);
+  service = await db.calc_services(req.session.serviceId);
   subtotal = price;// + service;
   tax = await db.calc_tax(subtotal);
   total = await db.calc_total(subtotal);
-  res.render('payment', { title: 'Payment Summary', price: price, tax: tax, total: total});
+  res.render('payment', { title: 'Payment Summary', price: price, service: service, tax: tax, total: total});
   //res.render('payment', {title: 'Payment Summary'})
 });
 
