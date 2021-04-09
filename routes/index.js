@@ -105,7 +105,7 @@ router.get('/payment', async function(req, res) {
   //console.log('serviceId', req.session.serviceId);
   price = await db.display_price(req.session.roomId,req.session.days,req.session.pricePolicy); //req.session.roomId
   service = await db.calc_services(req.session.serviceId,req.session.days);
-  subtotal = price + service;
+  subtotal = await db.calc_subtotal(price, service);
   tax = await db.calc_tax(subtotal);
   total = await db.calc_total(subtotal);
   req.session.totalPrice = total;

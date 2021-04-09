@@ -85,7 +85,11 @@ async function display_price(roomId, days, policy) {
     //console.log('room: ', room);
     //maxPrice = room.maxPrice * multiplier
     var total = room.maxPrice * days * policy;
-    return total;
+    return total.toFixed(2);
+}
+async function calc_subtotal(price, service) {
+    var total = parseFloat(price) + parseFloat(service);
+    return total.toFixed(2);
 }
 
 async function calc_tax(subtotal) {
@@ -98,7 +102,7 @@ async function calc_total(subtotal) {
     return total.toFixed(2); //rounded to 2 decimals
 }
 
-async function calc_services(serviceId, days, policy) {
+async function calc_services(serviceId, days) {
     var conn = await connect();
     var price = 0;
     var iD = serviceId;
@@ -109,8 +113,8 @@ async function calc_services(serviceId, days, policy) {
         price += service.price;
         //console.log('price: ', price);
     }
-    var total = price * days;
-    return total; //rounded to 2 decimals
+    var total = parseFloat(price) * parseFloat(days);
+    return total.toFixed(2); //rounded to 2 decimals
 }
 
 async function enter_payment_info(username){
@@ -426,6 +430,7 @@ module.exports = {
     url,
     check_payment_info,
     display_price,
+    calc_subtotal,
     calc_tax,
     calc_total,
     calc_services,
