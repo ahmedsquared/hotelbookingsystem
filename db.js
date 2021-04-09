@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url =  'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
+var url =  'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 const { RequestHeaderFieldsTooLarge } = require("http-errors");
 
@@ -139,9 +139,15 @@ async function calc_days(start, end) {
 async function check_payment_info(username, owner, credit_num, csv, exp, roomId, services, totalPrice, customer, startDate, endDate, timestamp) {
    
     var conn = await connect();
-    var user = await conn.collection('users').findOne({username});
+    var check_user = await conn.collection('users').findOne({username});
     var payment_processed = 0;
     var bookingId = 1;
+    if (check_user.owner == null || check_user.credit_num == null || check_user.csv == null || check_user.exp == null){
+        await payment_info(username, owner, credit_num, csv, exp);
+    }
+    var user = await conn.collection('users').findOne({username});
+    console.log(owner);
+    console.log(user.owner);
     if (user.owner == owner && user.credit_num == credit_num && user.csv == csv && user.exp == exp) {
         console.log('Success Payment Match!\n');
         console.log('roomId', roomId);
