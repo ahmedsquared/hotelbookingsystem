@@ -278,8 +278,8 @@ async function getBookings(username){
             arr[i].roomSize = room.roomSize;
             arr[i].hasBalcony = room.hasBalcony;
             arr[i].facesDirection = room.facesDirection;
-            arr[i].startDate = formatDate(arr[i].startDate);
-            arr[i].endDate = formatDate(arr[i].endDate);
+            arr[i].startDate = arr[i].startDate;
+            arr[i].endDate = arr[i].endDate;
         }
     }
     return arr;
