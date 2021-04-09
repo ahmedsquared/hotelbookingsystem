@@ -207,29 +207,33 @@ router.get('/success', async function (req, res) {
 });
 
 router.get('/login', async function(req, res){
-  res.render('login', {title: 'Login'});
+  res.render('login', {title: 'Login', status: 'success'});
 });
 
 router.post('/login', async function(req, res){
   var {username, password, register} = req.body;
-  
+  var succesfulLogin = true;
 
   if (register){
     await db.register(username, password);
   }else{
     console.log('logging in ...', username);
-    await db.login(username, password);
+    await db.login(username, password).catch(() => {
+      succesfulLogin = false;
+      res.render('login', {title: 'Login', status: 'error', error: 'Failed Login'});
+    });
+  }
+  if (succesfulLogin) {
+    req.session.username = username;
+
+    if (username == 'Admin'){
+      res.redirect('/admin');
+    }
+    else{
+      res.redirect('/customer');
+    }
   }
 
-  req.session.username = username;
-
-  if (username == 'Admin'){
-    res.redirect('/admin');
-  }
-  else{
-    res.redirect('/customer');
-  }
-  
 });
 
 function ensureLoggedIn(req, res, next){
