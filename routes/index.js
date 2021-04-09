@@ -146,6 +146,7 @@ router.get('/search', function(req, res, next) {
 });
 
 router.post('/search', async function(req, res) {
+  var x = await db.getServices();
   if (req.body.book) {
     console.log(req.body.book);
   }

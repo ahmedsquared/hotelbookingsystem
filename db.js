@@ -368,7 +368,19 @@ async function addServices(serviceId, price) {
 
 async function getServices() {
     var conn = await connect();
-    var services = conn.collection('hotelServices').find({}).toArray();
+    var services = await conn.collection('hotelServices').find({}).toArray();
+    var service1 = await conn.collection('hotelServices').findOne({serviceId: "lateCheckout"});
+    var service2 = await conn.collection('hotelServices').findOne({serviceId: "babyCrib"});
+    var service3 = await conn.collection('hotelServices').findOne({serviceId: "petHotel"});
+    if (service1 == null) {
+        await addServices("lateCheckout", 20);
+    }
+    if (service2 == null) {
+        await addServices("babyCrib", 15);
+    }
+    if (service3 == null) {
+        await addServices("petHotel", 50);
+    }
     return services;
 }
 
