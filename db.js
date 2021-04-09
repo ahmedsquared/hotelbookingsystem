@@ -98,7 +98,7 @@ async function calc_total(subtotal) {
     return total.toFixed(2); //rounded to 2 decimals
 }
 
-async function calc_services(serviceId) {
+async function calc_services(serviceId, days) {
     var conn = await connect();
     var price = 0;
     var iD = serviceId;
@@ -109,7 +109,8 @@ async function calc_services(serviceId) {
         price += service.price;
         //console.log('price: ', price);
     }
-    return price; //rounded to 2 decimals
+    var total = price * days;
+    return total; //rounded to 2 decimals
 }
 
 async function enter_payment_info(username){
