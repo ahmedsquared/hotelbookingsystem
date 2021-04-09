@@ -229,7 +229,7 @@ router.post('/back_admin', async function(req, res){
   res.redirect('/admin');
 });
 
-router.post('/to__admin_bookings', async function(req, res){
+router.post('/to_admin_bookings', async function(req, res){
   res.redirect('/admin_bookings');
 });
 

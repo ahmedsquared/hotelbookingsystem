@@ -1,11 +1,14 @@
 <h1>Admin Home Page</h1>
-<h1>Welcome, {{username}}</h1>
-<form method="post" action="to__admin_bookings">
-    <input value="All Bookings" type="submit">
-</form>
-<form method="post" action="to_add">
-    <input value="Add Rooms" type="submit">
-</form>
-<form method="post" action="logout">
-    <input type="submit" value="Logout">
-</form>
+<h1>Welcome {{username}}</h1>
+
+<div class="customer-home">
+    <form method="post" action="to_admin_bookings">
+        <button class="big-button" value="All Bookings" type="submit">All Bookings</button>
+    </form>
+    <form method="post" action="to_add">
+        <button class="big-button" value="Add Rooms" type="submit">Add Rooms</button>
+    </form>
+    <form method="post" action="logout">
+        <button class="big-button" value="Logout" type="submit" >Logout</button>
+    </form>
+</div>
