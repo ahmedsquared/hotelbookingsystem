@@ -120,7 +120,8 @@ router.post('/payment', async function(req, res){
 
   //Check for pay or back button pressed
   if (pay) {
-    var check = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp, req.session.roomId, req.session.serviceId, req.session.totalPrice, req.session.username, req.session.start, req.session.end, Date.now());
+    new Date();
+    var check = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp, req.session.roomId, req.session.serviceId, req.session.totalPrice, req.session.username, req.session.bookingStart, req.session.bookingEnd, Date.now());
     if (check == 1) {
       //create booking and redirect to user home page
       res.redirect('/customer');
@@ -176,8 +177,8 @@ router.post('/confirm_services', async function (req, res) {
   var selectedServices = [];
   const startDate = req.body.startDate;
   const endDate = req.body.endDate;
-  //req.session.bookingStart = startDate;
-  //req.session.bookingEnd = endDate;
+  req.session.bookingStart = startDate;
+  req.session.bookingEnd = endDate;
   req.session.days = await db.calc_days(startDate, endDate);
   console.log('days: ', req.session.days);
   req.session.pricePolicy = await db.calc_policy(startDate, new Date());
