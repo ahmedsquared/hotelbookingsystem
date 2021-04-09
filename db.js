@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url =  'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
+var url =  'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 const { RequestHeaderFieldsTooLarge } = require("http-errors");
 
@@ -79,10 +79,10 @@ async function payment_info(username, owner, credit_num, csv, exp) {
 
 async function display_price(roomId, days) {
     var conn = await connect();
-    console.log('roomIddisplay ', roomId);
+    //console.log('roomIddisplay ', roomId);
     var id = parseInt(roomId);
     var room = await conn.collection('hotelRooms').findOne({ roomId: id });
-    console.log('room: ', room);
+    //console.log('room: ', room);
     //maxPrice = room.maxPrice * multiplier
     var total = room.maxPrice * days;
     return total;
@@ -131,14 +131,24 @@ async function calc_days(start, end) {
     return diffDays;
 }
 
-async function check_payment_info(username, owner, credit_num, csv, exp) {
+async function check_payment_info(username, owner, credit_num, csv, exp, roomId, services, totalPrice, customer, startDate, endDate, timestamp) {
    
     var conn = await connect();
     var user = await conn.collection('users').findOne({username});
     var payment_processed = 0;
+    var bookingId = 1;
     if (user.owner == owner && user.credit_num == credit_num && user.csv == csv && user.exp == exp) {
-        console.log('Success Payment Match:\n');
+        console.log('Success Payment Match!\n');
+        console.log('roomId', roomId);
+        console.log('services', services);
         payment_processed = 1;
+        var existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
+        while (existingBooking != null) {
+            bookingId ++;
+            existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
+        }
+        console.log('bookingId', bookingId);
+        addBooking(bookingId, "Confirmed", 1, services, totalPrice, customer, startDate, endDate, timestamp);
     }
     else {
         payment_processed = 0;
