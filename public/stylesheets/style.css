@@ -270,6 +270,10 @@ h1 {
   display: none;
 }
 
+.success-view-button {
+  margin-top: 20px;
+}
+
 .error-row {
   display: flex;
   color: red;

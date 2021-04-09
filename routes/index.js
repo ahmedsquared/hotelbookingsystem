@@ -203,13 +203,7 @@ router.post('/confirm_services', async function (req, res) {
 });
 
 router.get('/success', async function (req, res) {
-  const bookingAndRoom = await db.getBookingAndRoom(parseInt(req.session.bookingId));
-  res.render('booking_success', {
-    booking: bookingAndRoom.booking,
-    room: bookingAndRoom.room,
-    startDate: db.formatDate(bookingAndRoom.booking.startDate),
-      endDate: db.formatDate(bookingAndRoom.booking.endDate)
-    });
+  res.render('booking_success', {});
 });
 
 router.get('/login', async function(req, res){
