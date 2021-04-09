@@ -109,7 +109,7 @@ router.get('/payment', async function(req, res) {
   tax = await db.calc_tax(subtotal);
   total = await db.calc_total(subtotal);
   req.session.totalPrice = total;
-  res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total});
+  res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total, status: "success"});
   //res.render('payment', {title: 'Payment Summary'})
 });
 
@@ -127,7 +127,11 @@ router.post('/payment', async function(req, res){
       res.redirect('/customer');
     }
     else {
-//res.redirect('/payment');
+      //res.redirect('/payment');
+      
+      var error = "Payment Info Mismatch!";
+      console.log('Error ...', error);
+      res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total, error: "Payment Info Mismatch!", status: "error"})
     }
 
   }

@@ -258,3 +258,16 @@ h1 {
 .Canceled-button {
   display: none;
 }
+
+.success-row {
+  display: none;
+}
+
+.error-row {
+  display: flex;
+  color: red;
+  justify-content: space-between;
+  margin: 20px 0;
+  font-family: monospace;
+  font-size: x-large;
+}
