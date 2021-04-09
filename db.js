@@ -153,7 +153,7 @@ async function check_payment_info(username, owner, credit_num, csv, exp, roomId,
             existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
         }
         console.log('bookingId', bookingId);
-        addBooking(bookingId, "Confirmed", 1, services, totalPrice, customer, startDate, endDate, timestamp);
+        addBooking(bookingId, "Confirmed", parseInt(roomId), services, totalPrice, customer, startDate, endDate, timestamp);
     }
     else {
         payment_processed = 0;
