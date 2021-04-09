@@ -1,8 +1,36 @@
-<p>CHOOSE SERVICES for room {{this.roomToBookId}}</p>
-<form method="post" action="confirm_services">
-    {{#each availableServices}}
-    <label for="{{this.serviceId}}">{{this.serviceId}} ${{this.price}}</label><input name="{{this.serviceId}}"
-        type="checkbox"><br />
-    {{/each}}
-    <button type="submit" name="checkout">Checkout</button>
-</form>
+<h1>Booking Room {{this.roomToBookId}}</h1>
+<div class="services-view">
+
+    <form method="post" action="confirm_services" class="form-view">
+        <div class="form-row">
+            <label for="startDate">From:</label>
+            <input name="startDate" type="date" required min="{{this.startBound}}" max="{{this.endBound}}">
+        </div>
+
+        <div class="form-row">
+            <label for="endDate">To:</label>
+            <input name="endDate" type="date" required min="{{this.startBound}}" max="{{this.endBound}}">
+        </div>
+        {{#each availableServices}}
+        <div class="form-row">
+            <label for="{{this.serviceId}}">{{this.serviceId}} ${{this.price}}</label>
+            <input name="{{this.serviceId}}" type="checkbox">
+        </div>
+        {{/each}}
+        <div class="form-row">
+            <div></div>
+            <button type="submit" name="checkout">Checkout</button>
+            <div></div>
+        </div>
+    </form>
+    <div class="form-row">
+        <div></div>
+        <form method="post" action="to_search">
+            <button name="Back" type="submit">Back</button>
+        </form>
+        <div></div>
+    </div>
+
+
+
+</div>

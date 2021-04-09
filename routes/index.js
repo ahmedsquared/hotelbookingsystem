@@ -135,6 +135,8 @@ router.post('/search', async function(req, res) {
     results = await db.searchRooms(req.body);
     req.session.start = req.body.startDate;
     req.session.end = req.body.endDate;
+    req.session.startBound = req.body.startDate;
+    req.session.endBound = req.body.endDate;
     req.session.search = req.body;
     console.log('req.session.search=  ',req.session.search);
     //console.log('start date : ',req.session.start);
@@ -150,19 +152,23 @@ router.post('/book_room', async function (req, res) {
   req.session.roomId = req.body.book;
   console.log('roomId: ', req.session.roomId);
   var availableServices = await db.getServices();
-  res.render('chooseServices', {title: 'Choose Services', roomToBookId, availableServices})
+  res.render('chooseServices', {title: 'Choose Services', roomToBookId, availableServices, startBound: req.session.startBound, endBound: req.session.endBound})
 })
 
 router.post('/confirm_services', async function (req, res) {
-  const availableServices = req.body;
+  console.log(req.body);
   var selectedServices = [];
-  for (const serviceId in availableServices) {
-    if (availableServices[serviceId] == 'on') {
+  const startDate = req.body.startDate;
+  const endDate = req.body.endDate;
+  for (const serviceId in req.body) {
+    if (req.body[serviceId] == 'on') {
       selectedServices.push(serviceId);
     }
   }
   req.session.serviceId = selectedServices;
   console.log('Selected Services: ', req.session.serviceId);
+  console.log('startDate: ', startDate);
+  console.log('endDate: ', endDate);
   res.redirect('/payment');
 });
 
