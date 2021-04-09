@@ -84,7 +84,7 @@ async function display_price(roomId, days, policy) {
     var room = await conn.collection('hotelRooms').findOne({ roomId: id });
     //console.log('room: ', room);
     //maxPrice = room.maxPrice * multiplier
-    var total = room.maxPrice * days * policy;
+    var total = room.basePrice * days * policy;
     return total.toFixed(2);
 }
 async function calc_subtotal(price, service) {
