@@ -1,0 +1,42 @@
+<h1>Your Booking Was <span class="Confirmed">Successful!</span></h1>
+<div class="success-view">
+    <div class="bookings-card">
+        <div class="bookings-card-title">Room {{this.room.roomId}}</div>
+        <div class="bookings-card-line">
+            <div>Status:</div>
+            <div class="{{this.booking.bookingStatus}}">{{this.booking.bookingStatus}}</div>
+        </div>
+        <div class="bookings-card-line">
+            <div>Booked From:</div>
+            <div>{{this.startDate}} - {{this.endDate}}</div>
+        </div>
+        <div class="bookings-card-line">
+            <div>Size:</div>
+            <div>{{this.room.roomSize}}</div>
+        </div>
+        <div class="bookings-card-line">
+            <div>Beds:</div>
+            <div>{{this.room.numBeds}} {{this.room.bedSize}}</div>
+        </div>
+        <div class="bookings-card-line">
+            <div>Total Price:</div>
+            <div>${{this.booking.totalPrice}}</div>
+        </div>
+        <div class="bookings-card-line">
+            <div>Faces:</div>
+            <div>{{this.room.facesDirection}}</div>
+        </div>
+        <div class="bookings-card-line">
+            {{#if this.room.hasBalcony}}Has Balcony
+            {{else}}No Balcony
+            {{/if}}
+        </div>
+        <div class="bookings-card-line">
+            <div>Services:</div>
+            <div>{{this.booking.services}}</div>
+        </div>
+    </div>
+    <form method="post" action="back_customer">
+        <button type="submit">Home</button>
+    </form>
+</div>

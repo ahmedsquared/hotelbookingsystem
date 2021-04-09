@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url =  'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
+var url =  'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 const { RequestHeaderFieldsTooLarge } = require("http-errors");
 
@@ -157,9 +157,9 @@ async function check_payment_info(username, owner, credit_num, csv, exp, roomId,
     }
     else {
         payment_processed = 0;
-        throw new Error("Payment Information Mismatch!");
+        //throw new Error("Payment Information Mismatch!");
     }
-    return payment_processed;
+    return {status: payment_processed, bookingId: bookingId};
   
 }
 
@@ -261,6 +261,13 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
             }
         }
     )
+}
+
+async function getBookingAndRoom(bookingId) {
+    var conn = await connect();
+    var booking = await conn.collection('hotelBookings').findOne({bookingId: parseInt(bookingId)});
+    var room = await conn.collection('hotelRooms').findOne({_id: booking.room});
+    return {booking, room};
 }
 
 async function getBookings(username){
@@ -465,7 +472,9 @@ module.exports = {
     addRoom,
     getServices,
     adjustPricePolicy,
-    getPricePolicy
+    getPricePolicy,
+    getBookingAndRoom,
+    formatDate
 }
 
 //addServices("lateCheckout", 20);

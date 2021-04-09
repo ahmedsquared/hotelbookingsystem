@@ -109,7 +109,7 @@ router.get('/payment', async function(req, res) {
   tax = await db.calc_tax(subtotal);
   total = await db.calc_total(subtotal);
   req.session.totalPrice = total;
-  res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total});
+  res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total, status: "success"});
   //res.render('payment', {title: 'Payment Summary'})
 });
 
@@ -121,13 +121,19 @@ router.post('/payment', async function(req, res){
   //Check for pay or back button pressed
   if (pay) {
     new Date();
-    var check = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp, req.session.roomId, req.session.serviceId, req.session.totalPrice, req.session.username, req.session.bookingStart, req.session.bookingEnd, Date.now());
+    var paymentResult = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp, req.session.roomId, req.session.serviceId, req.session.totalPrice, req.session.username, req.session.bookingStart, req.session.bookingEnd, Date.now());
+    var check = paymentResult.status;
     if (check == 1) {
       //create booking and redirect to user home page
-      res.redirect('/customer');
+      req.session.bookingId = paymentResult.bookingId;
+      res.redirect('/success');
     }
     else {
-//res.redirect('/payment');
+      //res.redirect('/payment');
+      
+      var error = "Payment Info Mismatch!";
+      console.log('Error ...', error);
+      res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total, error: "Payment Info Mismatch!", status: "error"})
     }
 
   }
@@ -196,6 +202,15 @@ router.post('/confirm_services', async function (req, res) {
   res.redirect('/payment');
 });
 
+router.get('/success', async function (req, res) {
+  const bookingAndRoom = await db.getBookingAndRoom(parseInt(req.session.bookingId));
+  res.render('booking_success', {
+    booking: bookingAndRoom.booking,
+    room: bookingAndRoom.room,
+    startDate: db.formatDate(bookingAndRoom.booking.startDate),
+      endDate: db.formatDate(bookingAndRoom.booking.endDate)
+    });
+});
 
 router.get('/login', async function(req, res){
   res.render('login', {title: 'Login'});
