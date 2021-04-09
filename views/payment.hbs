@@ -1,27 +1,48 @@
 <h1>Payment Summary</h1>
 
-<form method="post">
-   <ul>
-        <li>Room Price:     ${{price}}</li> 
-        <li>Extra Services: ${{service}}</li>
-        <li>Subtotal:       ${{subtotal}}</li>
-        <li>Tax:            ${{tax}}</li>
-        <li>Total:          ${{total}}</li>     
-    </ul>
-    <input name="owner" type="text" placeholder="Card Owner">
-    <br>
-    <br>
-    <input name="credit_num" placeholder="Credit Card Number">
-    <br>
-    <br>
-    <input name="csv" placeholder="CSV">
-    <br>
-    <br>
-    <input name="exp" type="text" placeholder="Expiry Date mm-yy">
-    <br>
-    <br>
-    <input name="pay" value="Pay Now" type="submit">
-    <br>
-    <br>
-    <input name="back" value="Back" type="submit">
+<form method="post" class="payment-view">
+    <div class="form-view">
+        <div class="form-row">
+            <span>Room Price:</span>
+            <span>${{price}}</span>
+        </div>
+        <div class="form-row">
+            <span>Extra Services:</span>
+            <span>${{service}}</span>
+        </div>
+        <div class="form-row">
+            <span>Subtotal:</span>
+            <span>${{subtotal}}</span>
+        </div>
+        <div class="form-row">
+            <span>Tax:</span>
+            <span>${{tax}}</span>
+        </div>
+        <div class="horizontal-line"></div>
+        <div class="form-row">
+            <span>Total:</span>
+            <span>${{total}}</span>
+        </div>
+        <div class="horizontal-line"></div>
+        <div class="form-row">
+            <label for="owner">Card Owner</label>
+            <input name="owner" type="text" placeholder="e.g. John Doe">
+        </div>
+        <div class="form-row">
+            <label for="owner">Card Number</label>
+            <input name="credit_num" placeholder="XXXX-XXXX-XXXX-XXXX">
+        </div>
+        <div class="form-row">
+            <label for="owner">CSV</label>
+            <input name="csv" placeholder="XXX">
+        </div>
+        <div class="form-row">
+            <label for="owner">Expiry</label>
+            <input name="exp" type="text" placeholder="mm-yy">
+        </div>
+        <div class="form-row">
+            <button name="back" value="Back" type="submit">Back</button>
+            <button name="pay" value="Pay Now" type="submit">Pay</button>
+        </div>
+    </div>
 </form>
