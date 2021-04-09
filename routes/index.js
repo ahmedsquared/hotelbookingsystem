@@ -121,10 +121,12 @@ router.post('/payment', async function(req, res){
   //Check for pay or back button pressed
   if (pay) {
     new Date();
-    var check = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp, req.session.roomId, req.session.serviceId, req.session.totalPrice, req.session.username, req.session.bookingStart, req.session.bookingEnd, Date.now());
+    var paymentResult = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp, req.session.roomId, req.session.serviceId, req.session.totalPrice, req.session.username, req.session.bookingStart, req.session.bookingEnd, Date.now());
+    var check = paymentResult.status;
     if (check == 1) {
       //create booking and redirect to user home page
-      res.redirect('/customer');
+      req.session.bookingId = paymentResult.bookingId;
+      res.redirect('/success');
     }
     else {
       //res.redirect('/payment');
@@ -200,6 +202,9 @@ router.post('/confirm_services', async function (req, res) {
   res.redirect('/payment');
 });
 
+router.get('/success', async function (req, res) {
+  res.render('booking_success', {});
+});
 
 router.get('/login', async function(req, res){
   res.render('login', {title: 'Login'});

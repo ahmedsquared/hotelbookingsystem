@@ -165,7 +165,7 @@ async function check_payment_info(username, owner, credit_num, csv, exp, roomId,
         payment_processed = 0;
         //throw new Error("Payment Information Mismatch!");
     }
-    return payment_processed;
+    return {status: payment_processed, bookingId: bookingId};
   
 }
 
@@ -267,6 +267,13 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
             }
         }
     )
+}
+
+async function getBookingAndRoom(bookingId) {
+    var conn = await connect();
+    var booking = await conn.collection('hotelBookings').findOne({bookingId: parseInt(bookingId)});
+    var room = await conn.collection('hotelRooms').findOne({_id: booking.room});
+    return {booking, room};
 }
 
 async function getBookings(username){
@@ -471,7 +478,9 @@ module.exports = {
     addRoom,
     getServices,
     adjustPricePolicy,
-    getPricePolicy
+    getPricePolicy,
+    getBookingAndRoom,
+    formatDate
 }
 
 //addServices("lateCheckout", 20);
