@@ -1,6 +1,9 @@
 <link rel="stylesheet" type="text/css" href="../public/stylesheets/customer_bookings.css" />
 <section class="bookings-view">
     <h1>All Bookings</h1>
+    <form method="post" action="back_admin">
+        <button name="Back" type="submit">Back</button>
+    </form>
     <div class="bookings-view-content">
         <div class="bookings-container">
             {{#each items}}
@@ -59,7 +62,3 @@
         </div>
     </div>
 </section>
-
-<form method="post" action="back_admin">
-    <input value="Back" type="submit">
-</form>
