@@ -103,7 +103,7 @@ router.post('/admin_bookings', async function(req, res){
 
 router.get('/payment', async function(req, res) {
   //console.log('serviceId', req.session.serviceId);
-  price = await db.display_price(req.session.roomId,req.session.days); //req.session.roomId
+  price = await db.display_price(req.session.roomId,req.session.days,req.session.pricePolicy); //req.session.roomId
   service = await db.calc_services(req.session.serviceId,req.session.days);
   subtotal = price + service;
   tax = await db.calc_tax(subtotal);
@@ -155,10 +155,9 @@ router.post('/search', async function(req, res) {
     req.session.startBound = req.body.startDate;
     req.session.endBound = req.body.endDate;
     req.session.search = req.body;
-    console.log('req.session.search=  ',req.session.search);
+    //console.log('req.session.search=  ',req.session.search);
     //console.log('start date : ',req.session.start);
-    //console.log('end date: ',req.session.end);
-    req.session.days = await db.calc_days(req.session.start, req.session.end);
+    //console.log('end date: ',req.session.end);    
     //console.log('days: ', req.session.days);
     res.render('searchView', { title: 'Search Results', results: results })
   }
@@ -177,6 +176,12 @@ router.post('/confirm_services', async function (req, res) {
   var selectedServices = [];
   const startDate = req.body.startDate;
   const endDate = req.body.endDate;
+  //req.session.bookingStart = startDate;
+  //req.session.bookingEnd = endDate;
+  req.session.days = await db.calc_days(startDate, endDate);
+  console.log('days: ', req.session.days);
+  req.session.pricePolicy = await db.calc_policy(startDate, new Date());
+  console.log('policy: ', req.session.pricePolicy);
   for (const serviceId in req.body) {
     if (req.body[serviceId] == 'on') {
       selectedServices.push(serviceId);
