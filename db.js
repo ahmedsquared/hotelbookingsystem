@@ -153,7 +153,7 @@ async function check_payment_info(username, owner, credit_num, csv, exp, roomId,
             existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
         }
         console.log('bookingId', bookingId);
-        addBooking(bookingId, "Confirmed", 1, services, totalPrice, customer, startDate, endDate, timestamp);
+        addBooking(bookingId, "Confirmed", parseInt(roomId), services, totalPrice, customer, startDate, endDate, timestamp);
     }
     else {
         payment_processed = 0;
@@ -244,8 +244,11 @@ async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice
     else if (roomIdent == null){
         throw new Error('Room does not exist.');
     }
+
+    const startingDate = new Date(startDate);
+    const endingDate = new Date(endDate);
     
-    await conn.collection('hotelBookings').insertOne({bookingId, bookingStatus, room: roomIdent._id, services, totalPrice, customer, startDate, endDate, timestamp});
+    await conn.collection('hotelBookings').insertOne({bookingId, bookingStatus, room: roomIdent._id, services, totalPrice, customer, startDate: startingDate, endDate: endingDate, timestamp});
 
 
     existingBooking = await conn.collection('hotelBookings').findOne({bookingId});
@@ -282,8 +285,8 @@ async function getBookings(username){
             arr[i].roomSize = room.roomSize;
             arr[i].hasBalcony = room.hasBalcony;
             arr[i].facesDirection = room.facesDirection;
-            arr[i].startDate = arr[i].startDate;
-            arr[i].endDate = arr[i].endDate;
+            arr[i].startDate = formatDate(arr[i].startDate);
+            arr[i].endDate = formatDate(arr[i].endDate);
         }
     }
     return arr;
@@ -292,7 +295,7 @@ async function getBookings(username){
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
+        day = '' + (d.getDate() + 1),
         year = d.getFullYear();
 
     if (month.length < 2) 
@@ -469,7 +472,7 @@ module.exports = {
 //addServices("babyCrib", 15);
 //addServices("petHotel", 50);
 
-//add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
+payment_info("mathew", "mathew", 456192395487, 992, "02-20");
 //payment_info("Sam", "Sam", 456192395487, 992, "02-20");
 
 //addPricePolicy(1, 0.9, 1.0, 1.1);
