@@ -91,6 +91,7 @@ router.get('/payment', async function(req, res) {
   subtotal = price + service;
   tax = await db.calc_tax(subtotal);
   total = await db.calc_total(subtotal);
+  req.session.totalPrice = total;
   res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total});
   //res.render('payment', {title: 'Payment Summary'})
 });
@@ -102,7 +103,7 @@ router.post('/payment', async function(req, res){
 
   //Check for pay or back button pressed
   if (pay) {
-    var check = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp);
+    var check = await db.check_payment_info(req.session.username, owner, credit_num, csv, exp, req.session.roomId, req.session.serviceId, req.session.totalPrice, req.session.username, req.session.start, req.session.end, Date.now());
     if (check == 1) {
       //create booking and redirect to user home page
       res.redirect('/customer');
@@ -136,10 +137,12 @@ router.post('/search', async function(req, res) {
     req.session.end = req.body.endDate;
     req.session.startBound = req.body.startDate;
     req.session.endBound = req.body.endDate;
-    console.log('start date : ',req.session.start);
-    console.log('end date: ',req.session.end);
+    req.session.search = req.body;
+    console.log('req.session.search=  ',req.session.search);
+    //console.log('start date : ',req.session.start);
+    //console.log('end date: ',req.session.end);
     req.session.days = await db.calc_days(req.session.start, req.session.end);
-    console.log('days: ', req.session.days);
+    //console.log('days: ', req.session.days);
     res.render('searchView', { title: 'Search Results', results: results })
   }
 });
@@ -167,8 +170,6 @@ router.post('/confirm_services', async function (req, res) {
   console.log('startDate: ', startDate);
   console.log('endDate: ', endDate);
   res.redirect('/payment');
-  //TODO Colin 
-  // res.render('INSERT_VIEW_HERE', {title: 'INSERT_TITLE_HERE', selectedServices});
 });
 
 
@@ -235,7 +236,7 @@ router.post('/back_admin', async function(req, res){
   res.redirect('/admin');
 });
 
-router.post('/to_admin_bookings', async function(req, res){
+router.post('/to__admin_bookings', async function(req, res){
   res.redirect('/admin_bookings');
 });
 
