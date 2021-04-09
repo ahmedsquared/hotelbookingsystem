@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url =  'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
+var url =  'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 const { RequestHeaderFieldsTooLarge } = require("http-errors");
 
@@ -404,6 +404,10 @@ async function getPricePolicy() {
 async function calc_policy(start, today) {
     var conn = await connect();
     var policies = await conn.collection('pricePolicy').findOne({policyId: 1});
+    if (policies == null){
+        await conn.collection('pricePolicy').insertOne({policyId: 1, multiplier1: 1.1, multiplier2: 1, multiplier3: 0.9});
+    }
+    policies = await conn.collection('pricePolicy').findOne({policyId: 1});
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const firstDate = new Date(today);
     const secondDate = new Date(start);
