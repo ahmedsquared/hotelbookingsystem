@@ -2,7 +2,7 @@ var {MongoClient, ObjectId} = require("mongodb");
 const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
-var url =  'mongodb+srv://dbUser:H09gHCOOguRPlSpg@cluster0.rqwpp.mongodb.net/cps888?retryWrites=true&w=majority';
+var url =  'mongodb+srv://coliwong:3Vh0IaUalo9V0YRC@cluster0.u1riz.mongodb.net/cps888?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
 const { RequestHeaderFieldsTooLarge } = require("http-errors");
 
@@ -77,14 +77,14 @@ async function payment_info(username, owner, credit_num, csv, exp) {
     }
 }
 
-async function display_price(roomId, days) {
+async function display_price(roomId, days, policy) {
     var conn = await connect();
     //console.log('roomIddisplay ', roomId);
     var id = parseInt(roomId);
     var room = await conn.collection('hotelRooms').findOne({ roomId: id });
     //console.log('room: ', room);
     //maxPrice = room.maxPrice * multiplier
-    var total = room.maxPrice * days;
+    var total = room.maxPrice * days * policy;
     return total;
 }
 
@@ -98,7 +98,7 @@ async function calc_total(subtotal) {
     return total.toFixed(2); //rounded to 2 decimals
 }
 
-async function calc_services(serviceId, days) {
+async function calc_services(serviceId, days, policy) {
     var conn = await connect();
     var price = 0;
     var iD = serviceId;
@@ -368,6 +368,12 @@ async function getServices() {
     return services;
 }
 
+/*
+async function addPricePolicy(policyId, multiplier1, multiplier2, multiplier3) {
+    var conn = await connect();
+    await conn.collection('pricePolicy').insertOne({policyId, multiplier1, multiplier2, multiplier3});
+}*/
+
 async function adjustPricePolicy(multipliers) {
     var conn = await connect();
     
@@ -395,6 +401,27 @@ async function getPricePolicy() {
     return policies;
 }
 
+async function calc_policy(start, today) {
+    var conn = await connect();
+    var policies = await conn.collection('pricePolicy').findOne({policyId: 1});
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const firstDate = new Date(today);
+    const secondDate = new Date(start);
+
+    const days = Math.round(Math.abs((firstDate - secondDate) / oneDay));
+
+    console.log('daysDiff', days);
+    if (days > 14) {
+        return policies.multiplier1;
+    }
+    else if (days < 15 && days > 6) {
+        return policies.multiplier2;
+    }
+    else if (days < 7) {
+        return policies.multiplier3;
+    }
+}
+
 module.exports = {
     url,
     check_payment_info,
@@ -403,6 +430,7 @@ module.exports = {
     calc_total,
     calc_services,
     calc_days,
+    calc_policy,
     searchRooms,
     login,
     register,
@@ -423,3 +451,4 @@ module.exports = {
 //add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
 //payment_info("Sam", "Sam", 456192395487, 992, "02-20");
 
+//addPricePolicy(1, 0.9, 1.0, 1.1);
