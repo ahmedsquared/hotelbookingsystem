@@ -385,6 +385,11 @@ async function adjustPricePolicy(multipliers) {
 
 async function getPricePolicy() {
     var conn = await connect();
+    var policyExists = await conn.collection('pricePolicy').findOne({policyId: 1});
+
+    if (policyExists == null){
+        await conn.collection('pricePolicy').insertOne({policyId: 1, multiplier1: 1.1, multiplier2: 1, multiplier3: 0.9});
+    }
     var policies = await conn.collection('pricePolicy').find({}).toArray();
  
     return policies;
