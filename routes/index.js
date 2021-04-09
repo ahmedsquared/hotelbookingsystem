@@ -64,6 +64,23 @@ router.post('/add_rooms', async function(req, res, next) {
   });
 });
 
+router.get('/price_policy', async function(req, res){
+  console.log(await db.getPricePolicy());
+  res.render('price_policy', {
+    title: "Adjust Price Policy",
+    items: await db.getPricePolicy(),
+  });
+});
+
+router.post('/price_policy', async function(req, res, next) {
+  console.log(req.body);
+  await db.adjustPricePolicy(req.body);
+  res.render('price_policy', {
+    title: "Adjust Price Policy",
+    items: await db.getPricePolicy(),
+  });
+});
+
 router.get('/admin_bookings', async function(req, res){
   var {username} = req.session;
   res.render('admin_bookings', {
@@ -225,6 +242,11 @@ router.post('/to_search', async function(req, res){
 router.post('/to_add', async function(req, res){
   res.redirect('/add_rooms');
 });
+
+router.post('/to_policy', async function(req, res){
+  res.redirect('/price_policy');
+});
+
 router.post('/back_admin', async function(req, res){
   res.redirect('/admin');
 });

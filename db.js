@@ -213,18 +213,9 @@ async function addRoom(numBeds, bedSize, roomSize, hasBalcony, facesDirection, b
 
 async function getAllRooms(){
     var conn = await connect();
-    var room = await conn.collection('hotelRooms').findOne({ roomId: 1 });
-    
-    var arr = [];
-    let i = 0;
+    var rooms = await conn.collection('hotelRooms').find({}).toArray();
 
-    while (room != null){
-        arr[i] = room;
-        var num = i + 2;
-        room = await conn.collection('hotelRooms').findOne({ roomId: num });
-        i++;
-    }
-    return arr;
+    return rooms;
 }
 
 async function addBooking(bookingId, bookingStatus, roomId, services, totalPrice, customer, startDate, endDate, timestamp){
@@ -329,7 +320,6 @@ async function getAllBookings(){
 async function cancelBooking(parameter){
     var conn = await connect();
     var bookingId = parseInt(parameter);
-    var booking = await conn.collection('hotelBookings').findOne({bookingId});
 
     await conn.collection('hotelBookings').updateOne(
         {bookingId},
@@ -367,6 +357,28 @@ async function getServices() {
     return services;
 }
 
+async function adjustPricePolicy(multipliers) {
+    var conn = await connect();
+    
+    await conn.collection('pricePolicy').updateOne(
+        {policyId: 1},
+        {
+            $set: {
+                multiplier1: multipliers.mult1,
+                multiplier2: multipliers.mult2,
+                multiplier3: multipliers.mult3,
+            }
+        }
+    )
+}
+
+async function getPricePolicy() {
+    var conn = await connect();
+    var policies = await conn.collection('pricePolicy').find({}).toArray();
+ 
+    return policies;
+}
+
 module.exports = {
     url,
     check_payment_info,
@@ -383,26 +395,15 @@ module.exports = {
     getAllBookings,
     getAllRooms,
     addRoom,
-    getServices
+    getServices,
+    adjustPricePolicy,
+    getPricePolicy
 }
 
 //addServices("lateCheckout", 20);
 //addServices("babyCrib", 15);
 //addServices("petHotel", 50);
-//addRoom(5, 2, "Double", "Large", "yes", "South", 900);
-//addBooking(5, "Confirmed", 5, "BabyCrib", 800, "Jared", "04-02-2021", "04-05-2021", Date.now());
 
 //add_payment_info("Sam", "Sam", 456192395487, 992, "02-20");
 //payment_info("Sam", "Sam", 456192395487, 992, "02-20");
 
-
-//addRoom(1, "King", "Small", "yes", "North", 600);
-//addRoom(2, 1, "King", "Medium", "no", "West", 800);
-//addRoom(3, 1, "Queen", "Medium", "no", "West", 600);
-//addRoom(4, 2, "Twin", "Medium", "yes", "East", 500);
-//addRoom(5, 2, "Double", "Large", "yes", "South", 900);
-
-//addBooking(1, "Confirmed", 2, "LateCheckout", 1000, "Jared", new Date("2021-04-02"), new Date("2021-04-05"), Date.now());
-//addBooking(2, "Confirmed", 3, "PetHotel", 900, "Jared", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
-//addBooking(3, "Confirmed", 1, "PetHotel", 800, "Colin", new Date("2021-04-07"), new Date("2021-04-10"), Date.now());
-//addBooking(4, "Confirmed", 2, "BabyCrib", 800, "Colin", new Date("2021-02-02"), new Date("2021-04-05"), Date.now());

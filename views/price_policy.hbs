@@ -1,0 +1,30 @@
+<link rel="stylesheet" type="text/css" href="../public/stylesheets/searchView.css" />
+<section class="search-view">
+    <h1>Adjust Price Policy</h1>
+    <form method="post" action="back_admin">
+        <button name="Back" type="submit">Back</button>
+    </form>
+    <div class="search-view-content">
+        {{#each items}}
+        <form method="post" class="search-view-form">
+            <div class="form-row">
+                <label for="mult1">0-7 Days Advanced Multiplier: {{this.multiplier1}}</label>
+                <input name="mult1" type="number" step="0.01" min="0" class="small-input" value="{{this.multiplier1}}">
+            </div>
+            <div class="form-row">
+                <label for="mult2">8-15 Days Advanced Multiplier: {{this.multiplier2}}</label>
+                <input name="mult2" type="number" step="0.01" min="0" class="small-input" value = "{{this.multiplier2}}">
+            </div>
+            <div class="form-row">
+                <label for="mult3">16+ Days Advanced Multiplier: {{this.multiplier3}}</label>
+                <input name="mult3" type="number" step="0.01" min="0" class="small-input" value = "{{this.multiplier3}}">
+            </div>
+            <div class="form-row">
+                <div></div>
+                <button type="submit" name="adjust">Adjust</button>
+                <div></div>
+            </div>
+        </form>
+        {{/each}}
+    </div>
+</section>
