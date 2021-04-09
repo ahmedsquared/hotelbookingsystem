@@ -204,8 +204,15 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* Customer Home Page */
+/* Pricing Policy Page */
+.policy-form-view {
+  height: 270px;
+  width: 350px;
+  padding: 30px;
+  background-color: #c3daff;
+}
 
+/* Customer Home Page */
 .customer-home {
   margin-top: 200px;
   display: flex;
@@ -246,6 +253,8 @@ h1 {
 .Canceled {
   color: red;
 }
+
+/* Cancel button removed if booking is canceled */
 .Canceled-button {
   display: none;
 }
