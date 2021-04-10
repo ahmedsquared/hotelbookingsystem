@@ -229,7 +229,7 @@ async function addRoom(numBeds, bedSize, roomSize, hasBalcony, facesDirection, b
         roomExists = await conn.collection('hotelRooms').findOne({roomId});
     }
     
-    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice});
+    await conn.collection('hotelRooms').insertOne({roomId, numBeds, bedSize, roomSize, hasBalcony, facesDirection, basePrice: Number(basePrice)});
 }
 
 async function getAllRooms(){
