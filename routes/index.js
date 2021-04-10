@@ -57,7 +57,7 @@ router.get('/add_rooms', async function(req, res){
 });
 
 router.post('/add_rooms', async function(req, res, next) {
-  await db.addRoom(req.body.numBeds, req.body.bedSize, req.body.roomSize, req.body.hasBalcony, req.body.facesDirection, req.body.basePrice);
+  await db.addRoom(req.body.numBeds, req.body.bedSize, req.body.roomSize, req.body.hasBalcony === 'Yes', req.body.facesDirection, req.body.basePrice);
   res.render('room_addition', {
     title: "Add Rooms",
     items: await db.getAllRooms(),
