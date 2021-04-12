@@ -448,13 +448,13 @@ async function calc_policy(start, today) {
 
     console.log('daysDiff', days);
     if (days > 14) {
-        return policies.multiplier1;
+        return policies.multiplier3;
     }
     else if (days < 15 && days > 6) {
         return policies.multiplier2;
     }
     else if (days < 7) {
-        return policies.multiplier3;
+        return policies.multiplier1;
     }
 }
 
