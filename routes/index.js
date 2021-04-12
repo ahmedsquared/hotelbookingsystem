@@ -129,22 +129,12 @@ router.post('/payment', async function(req, res){
       res.redirect('/success');
     }
     else {
-      //res.redirect('/payment');
       
       var error = "Payment Info Mismatch!";
       console.log('Error ...', error);
       res.render('payment', { title: 'Payment Summary', price: price, subtotal: subtotal, service: service, tax: tax, total: total, error: "Payment Info Mismatch!", status: "error"})
     }
-
   }
-  else {
-    //code to go back to previous screen
-  }
-
-  //store pulled username into session that is hooked up to a cookie
-  //req.session.username = username;
-  //Take me back to main page
-  //res.redirect('/payment');
 });
 
 router.get('/search', function(req, res, next) {
@@ -163,10 +153,6 @@ router.post('/search', async function(req, res) {
     req.session.startBound = req.body.startDate;
     req.session.endBound = req.body.endDate;
     req.session.search = req.body;
-    //console.log('req.session.search=  ',req.session.search);
-    //console.log('start date : ',req.session.start);
-    //console.log('end date: ',req.session.end);    
-    //console.log('days: ', req.session.days);
     res.render('searchView', { title: 'Search Results', results: results })
   }
 });
@@ -174,7 +160,6 @@ router.post('/search', async function(req, res) {
 router.post('/book_room', async function (req, res) {
   var roomToBookId = req.body.book;
   req.session.roomId = req.body.book;
-  console.log('roomId: ', req.session.roomId);
   var availableServices = await db.getServices();
   res.render('chooseServices', {title: 'Choose Services', roomToBookId, availableServices, startBound: req.session.startBound, endBound: req.session.endBound})
 })
@@ -187,9 +172,7 @@ router.post('/confirm_services', async function (req, res) {
   req.session.bookingStart = startDate;
   req.session.bookingEnd = endDate;
   req.session.days = await db.calc_days(startDate, endDate);
-  console.log('days: ', req.session.days);
   req.session.pricePolicy = await db.calc_policy(startDate, new Date());
-  console.log('policy: ', req.session.pricePolicy);
   for (const serviceId in req.body) {
     if (req.body[serviceId] == 'on') {
       selectedServices.push(serviceId);
@@ -237,7 +220,6 @@ router.post('/login', async function(req, res){
 });
 
 function ensureLoggedIn(req, res, next){
-  console.log('Ensure logged in')
   if (!req.session.username){
     console.log('Not logged in')
     res.redirect('/login');

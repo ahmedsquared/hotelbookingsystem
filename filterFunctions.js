@@ -27,7 +27,6 @@ function constructFilterObject(parameters) {
             };
         }
     });
-    console.log('FilterObject:\n', filterObject);
     return filterObject;
 }
 

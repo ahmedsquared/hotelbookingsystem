@@ -1,10 +1,8 @@
 var {MongoClient, ObjectId} = require("mongodb");
-const { registerHelper } = require("hbs");
 var bcrypt = require("bcrypt");
 var filters = require('./filterFunctions');
 var url =  'mongodb+srv://mathewbegg:yNDy4SfSkG5q@cluster0.lsu59.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 var { MongoClient } = require("mongodb");
-const { RequestHeaderFieldsTooLarge } = require("http-errors");
 
 var db = null;
 async function connect(){
@@ -25,7 +23,6 @@ async function searchRooms(parameters) {
     filterObject = filters.constructFilterObject(parameters);
     console.log('searching with the following filter object:\n', filterObject);
     const results = await conn.collection('hotelRooms').find(filterObject).toArray();
-    console.log('Results:\n', results);
 
     //Filter out results that have booking within the given date range
     const availableResults = [];
@@ -52,7 +49,7 @@ async function searchRooms(parameters) {
             availableResults.push(result);
         }
     }));
-    console.log('Available Results:\n', availableResults);
+    console.log('Available Results:\n', availableResults.map(room => "Room " + room.roomId));
     return availableResults;
 }
 
@@ -61,7 +58,6 @@ async function payment_info(username, owner, credit_num, csv, exp) {
     //Store user if exist into existingUser var
     var existingUser = await conn.collection('users').findOne({ username });
     
-        //await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
     if(existingUser == null) {
         await conn.collection('users').insertOne({ username, owner, credit_num, csv, exp });
     }
@@ -79,11 +75,8 @@ async function payment_info(username, owner, credit_num, csv, exp) {
 
 async function display_price(roomId, days, policy) {
     var conn = await connect();
-    //console.log('roomIddisplay ', roomId);
     var id = parseInt(roomId);
     var room = await conn.collection('hotelRooms').findOne({ roomId: id });
-    //console.log('room: ', room);
-    //maxPrice = room.maxPrice * multiplier
     var total = room.basePrice * days * policy;
     return total.toFixed(2);
 }
@@ -109,9 +102,7 @@ async function calc_services(serviceId, days) {
     for (var i=0; i<(iD.length); i++){
         var serviceId = iD[i];
         var service = await conn.collection('hotelServices').findOne({ serviceId });
-        //.log('service: ', service);
         price += service.price;
-        //console.log('price: ', price);
     }
     var total = parseFloat(price) * parseFloat(days);
     return total.toFixed(2); //rounded to 2 decimals
@@ -163,29 +154,9 @@ async function check_payment_info(username, owner, credit_num, csv, exp, roomId,
     }
     else {
         payment_processed = 0;
-        //throw new Error("Payment Information Mismatch!");
     }
     return {status: payment_processed, bookingId: bookingId};
   
-}
-
-async function getListItems(username) {
-    var conn = await connect();
-    var user = await conn.collection('users').findOne({ username });
-
-    console.log("List items: ", user.list);
-}
-
-async function deleteListItems(username, item){
-    var conn = await connect();
-    await conn.collection('users').updateOne(
-        {username},
-        {
-            $pull: {
-                list: item,
-            }
-        }
-    )
 }
 
 async function register(username, password){
@@ -400,12 +371,6 @@ async function getServices() {
     return services;
 }
 
-/*
-async function addPricePolicy(policyId, multiplier1, multiplier2, multiplier3) {
-    var conn = await connect();
-    await conn.collection('pricePolicy').insertOne({policyId, multiplier1, multiplier2, multiplier3});
-}*/
-
 async function adjustPricePolicy(multipliers) {
     var conn = await connect();
     
@@ -482,12 +447,3 @@ module.exports = {
     getBookingAndRoom,
     formatDate
 }
-
-//addServices("lateCheckout", 20);
-//addServices("babyCrib", 15);
-//addServices("petHotel", 50);
-
-payment_info("mathew", "mathew", 456192395487, 992, "02-20");
-//payment_info("Sam", "Sam", 456192395487, 992, "02-20");
-
-//addPricePolicy(1, 0.9, 1.0, 1.1);
