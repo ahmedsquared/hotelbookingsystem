@@ -1,5 +1,0 @@
-//addRoom(1, 1, "King", 330, "Window", 60);
-//addRoom(2, 1, "King", 330, "Window", 60);
-//addRoom(3, 1, "Queen", 330, "Balcony", 50);
-//addRoom(4, 2, "Full", 400, "Balcony", 90);
-//addRoom(5, 2, "Full", 400, "Balcony", 90);
